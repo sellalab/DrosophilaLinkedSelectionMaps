@@ -80,7 +80,7 @@ neg_log_P = neg_log_P/neg_log_samples(1) * 10^5;
 % end
 
 
-% [TAU_div params(59:61) neg_log_P]  % for minimal BS params
+[TAU_div params(59:61) neg_log_P];  % for minimal BS params
 % [TAU_div params(11:2:15) neg_log_P]  % for minimal SW params
 
 % [params(1) params(3) params(7:end) neg_log_P/1000000] %;params(1) params(3) w_s neg_log_P/1000000

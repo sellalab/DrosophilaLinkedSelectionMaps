@@ -22,7 +22,7 @@ outdir            = inoutfiles.outdir;  % where the grid files are placed
 outfile_pref      = inoutfiles.outfile_pref;
 chr_features_file = inoutfiles.chr_features_file;
 chr_id            = inoutfiles.chr_id;
-pos_grid_files    = inoutfiles.pos_grid_files;
+% pos_grid_files    = inoutfiles.pos_grid_files;
 genmap_files      = inoutfiles.genmap_files;
 genmap_token      = inoutfiles.genmap_token;
 
@@ -124,7 +124,7 @@ if ~isempty(SW_anno_files)
       end
     end
   end
-end 
+ 
   
   for c=1:C
     
@@ -179,7 +179,7 @@ end
     GEs.cfg.CalcSW  = CalcSW; % we assume here that the cfg struct is the same for all elements (in terms of parameters, not underlying files and annotations)
   end
   
-
+end
 
 
 

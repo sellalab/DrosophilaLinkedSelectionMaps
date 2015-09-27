@@ -40,7 +40,8 @@ end
 %% precalculate stats
 
 if isempty(preLHstats)
-  for c=iC
+  
+    for c=iC
 %     if isfield(cfg_inf, 'predef_idx_train') & ~isempty(cfg_inf.predef_idx_train)
     if exist('masks') & ~isempty(masks) % if masked are used, they are applied here (not used with the human data)
       predef_idx = masks{c};  
@@ -58,14 +59,15 @@ if isempty(preLHstats)
       cur_SWbase = {[]};
     else
       cur_SWbase = GEs.SWbase(c,:); % this contains coalescent rates due to sweeps on different s valued substitutions
+    end
+    
+    if ~isfield(GEs, 'gFocGrid')
+      cur_gFocGrid = {[]};
+    else
       cur_gFocGrid = GEs.gFocGrid{c}; % this contains the postitions corresponding to the coalescent rates in the last struct
     end
     
-    % edit for MEMORY MAP capability:
-    % add "invar_files" as an input to use memory maps inside function
-%      preLHstats{c} = calcPreLHStatsSw_memMap( c, cur_SWbase, cur_gFocGrid, cur_BSbase, fdata{c}, cfg_inf, invar_files  ); % predef_idx DM edit: remove weights (getting rid of masks)
-%      sprintf('done with chr%s', c)
-      preLHstats{c}    = calcPreLHStatsSw( cur_SWbase, cur_gFocGrid, cur_BSbase, fdata{c}, cfg_inf); % predef_idx DM edit: remove weights (getting rid of masks)
+    preLHstats{c}    = calcPreLHStatsSw( cur_SWbase, cur_gFocGrid, cur_BSbase, fdata{c}, cfg_inf); % predef_idx DM edit: remove weights (getting rid of masks)
    
     
     % preLHstats contains gSWj: this is a matrix of A x N dimensions where
@@ -79,7 +81,9 @@ if isempty(preLHstats)
 
     %     calc.EgMutDiv(c) = preLHstats{c}.EgMutDiv;
     
+    end
 end
+
 
 %% initial values for the likelihood:
 
