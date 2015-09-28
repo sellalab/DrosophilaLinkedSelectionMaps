@@ -8,9 +8,9 @@ param_stats.fit.EMutProx = calc.LHFuncStats.EMutProx;
 param_stats.fit.logLH    = calc.logLH;
 param_stats.fit.AIC      = 2*calc.DFs - 2*param_stats.fit.logLH*param_stats.fit.samples(1);
 
-
-
-
+if ~isfield(GEs, 'SWbase')
+% VERY patchy here:
+  GEs.SWbase = {[]};
 
 
 SWbase_params = [];

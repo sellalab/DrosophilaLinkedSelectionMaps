@@ -37,16 +37,31 @@ else
   EgMutDiv  = 0;
 end
 
-C        = length(cfg_inf.output.chromosomes);
-nSWannos = size( GEs.SWbase, 2 );
-nBSannos = size( GEs.BSbase, 2 );
+% patch this up to feed an empty SWbase to composePredictedDiversity:
+% for c=cfg_inf.output.chromosomes
+%     
+%     if ~isfield(GEs, 'SWbase')
+%       GEs.SWbase{c} = {[]};
+%     end
+% 
+%     if ~isfield(GEs, 'gFocGrid')
+%       GEs.gFocGrid{c} = {[]};
+%     end
+%     
+% end
+
+% C        = length(cfg_inf.output.chromosomes);
+% nSWannos = size( GEs.SWbase, 2 );
+% nBSannos = size( GEs.BSbase, 2 );
 
 for c=cfg_inf.output.chromosomes
     
+    % VERY patchy here:
+      GEs.SWbase(c,:) = {[]};
+      GEs.gFocGrid{c} = {[]};
+    
   [~, ~, stats.SWparams{c}, stats.BSparams{c}, DivRedPred{c}] = composePredictedDiversity2( GEs.SWbase(c,:), GEs.gFocGrid{c}, GEs.BSbase(c,:), params, cfg_inf.inf, positions{c}, EgMutDiv );
-  
-%   [~, ~, stats.SWparams{c}, stats.BSparams{c}, DivRedPred{c}] = composePredictedDiversity2( GEs.SWbase(c:nSWannos:end), GEs.gFocGrid{c}, GEs.BSbase(c:nBSannos:end), params, cfg_inf.inf, positions{c}, EgMutDiv );
-  
+    
   % write to file
   SaveLSMap( [outmap_pref cfg_inf.chr_id{c}], DivRedPred{c}, cfg_inf.output.LSmap_res );
   
