@@ -22,7 +22,7 @@ outdir            = inoutfiles.outdir;  % where the grid files are placed
 outfile_pref      = inoutfiles.outfile_pref;
 chr_features_file = inoutfiles.chr_features_file;
 chr_id            = inoutfiles.chr_id;
-% pos_grid_files    = inoutfiles.pos_grid_files;
+pos_grid_files    = inoutfiles.pos_grid_files;
 genmap_files      = inoutfiles.genmap_files;
 genmap_token      = inoutfiles.genmap_token;
 
@@ -109,7 +109,10 @@ if ~isempty(SW_anno_files)
         
         % read positions from the neutral sites files:
         f = fopen( pos_grid_files{c}, 'rt' );
-        Z = textscan( f, '%d\t%d\t%f\t%s\t%s\t%d', 'commentstyle', '#' );
+        
+        % edit 12/27: using neutral files as pos_grid files:
+        % formatting: 780428	162	0
+        Z = textscan( f, '%d\t%d\t%d', 'commentstyle', 'shell' );
         pos  = Z{1};
           
 %         pos = textread( pos_grid_files{c}, '%d', 'commentstyle', 'shell' ); % reads the SW_bases file -- change to read from main poly file...

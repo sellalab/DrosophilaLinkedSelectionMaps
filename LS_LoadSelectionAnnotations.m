@@ -41,11 +41,24 @@ if ~isempty(SW_anno_files)
         Annots.SW{c}{b}.name         = [chr_id{c} '_' SW_anno_tokens{b}];
         Annots.SW{c}{b}.file  = SW_anno_files{c}{b};
         
-        [Annots.SW{c}{b}.focals.pos, Annots.SW{c}{b}.focals.strand, Annots.SW{c}{b}.focals.isfake] = ...
-          textread( Annots.SW{c}{b}.file, '%d\t%c\t%d', 'commentstyle', 'shell' );
+%         [Annots.SW{c}{b}.focals.pos, Annots.SW{c}{b}.focals.strand, Annots.SW{c}{b}.focals.isfake] = ...
+%           textread( Annots.SW{c}{b}.file, '%d\t%c\t%d', 'commentstyle', 'shell' );
+
+
+        % edited 12/27: we don't care about strand or "isfake"
+        % formatting of my files: chr1	874672	G	C	NS
+        [~, Annots.SW{c}{b}.focals.pos, ~, ~, ~] = ...
+          textread( Annots.SW{c}{b}.file, '%s\t%d\t%s\t%s\t%s', 'commentstyle', 'shell' );
         
         %       Annots.SW{c}{b}.focals.gpos  = applyGenmap2pos( genmap{c}, Annots.SW{c}{b}.focals.pos );
-        Annots.SW{c}{b}.anno_len           = length( Annots.SW{c}{b}.focals.pos );
+        Annots.SW{c}{b}.anno_len           = length( Annots.SW{c}{b}.focals.pos ); 
+        % edit 12/27: just fake the other fields above for now, they dont 
+        % really matter:
+        for i=1:Annots.SW{c}{b}.anno_len
+            Annots.SW{c}{b}.focals.strand{i} = '+';
+            Annots.SW{c}{b}.focals.isfake(i) = 0;  % none of the subs are fake
+        end
+        
       end
     end
   end

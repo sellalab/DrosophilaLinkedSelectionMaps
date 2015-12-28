@@ -16,8 +16,14 @@ end
 %% general inits
 
 % just use this old method for now until sscanf is worked out...
+if 0
+  base_dir = '/Users/davidmurphy/GoogleDrive/linked_selection/lsm/cluster_mirror/';
+end
 
-base_dir = '/ifs/data/c2b2/gs_lab/dam2214/inf/';
+if 1
+  base_dir = '/ifs/data/c2b2/gs_lab/dam2214/inf/';
+end
+
 chr_features_file = [base_dir 'ch_features/chr_len_all.txt'];
 [chr_id, chr_len] = textread(chr_features_file, '%s %d', 'headerlines', 1);
 

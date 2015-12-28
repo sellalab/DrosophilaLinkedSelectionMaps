@@ -16,8 +16,14 @@ pos_max = grid(3);
 % end
 % thinned_pos = pos(find(needed));
 
-
-needed = histc([pos_min:delta:pos_max], [0; pos ;pos_max + 1]);  % [-Inf; pos ;Inf]
+% HISTC(X,EDGES)
+% edit 12/27 create a nan filter to make sure we dump positions outside the
+% scope of the gmap:
+% NOTE: this maybe not be sufficient downstream when the positions come
+% back, instead, alter the data or the gmaps themselves so that all neutral
+% sites are within the gmap
+nanfilter = isfinite(pos);
+needed = histc([pos_min:delta:pos_max], [0; pos(nanfilter) ;pos_max + 1]);  % [-Inf; pos ;Inf]
 thinned_i1 = find(needed(1:end-2)>0);
 thinned_i2 = [thinned_i1(2:end)-1  length(pos)];
 

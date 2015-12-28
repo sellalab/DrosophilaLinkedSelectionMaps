@@ -30,7 +30,8 @@ BSbase_params = [];
 if ~isempty(GEs.BSbase{1})
   for a=1:size(GEs.BSbase,2)
     BSbase_params{a}.u         = GEs.BSbase{1,a}.cfg.u_del;
-    BSbase_params{a}.t         = GEs.BSbase{1,a}.cfg.FE_grid;
+    % edit on 12/18 -- update for the new dims of FE_grid:
+    BSbase_params{a}.t         = GEs.BSbase{1,a}.cfg.FE_grid(a,:);
     BSbase_params{a}.nsites    = GEs.BSbase{1,a}.cfg.anno_len;
   end
 else
@@ -45,6 +46,12 @@ if calc.best_iter~=-1
 else
   param_stats.params = [];
 end
+% edit on 12/18 -- this ensures the data is printed out correctly
+for a=1:size(GEs.BSbase,2)
+    % for output purposes only
+    param_stats.params.BS.v_t = GEs.BSbase{1,a}.cfg.FE_grid(:,:);
+end
+
 % param_stats.params.tau = calc.params(3);
 param_stats.params.pi0_by_d = 1/param_stats.params.tau_div;
 
