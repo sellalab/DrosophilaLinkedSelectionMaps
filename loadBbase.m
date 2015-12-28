@@ -13,7 +13,7 @@ end
 % Bbase.res = [1000 1000 1000 1000];
 
 for k=1:length(maps)
-%    k
+	% maps{k}  -- debug printout (12/18) to see that the map names are formatted correctly
     [BL{k}, cfg{k}] = loadBmap( [mapsdir maps{k}] );
 %    [BL{k}, params] = loadBmap( [mapsdir '\' sprintf('chr1_ex_t%g.bkgd', Bbase.t(k))] );
 end

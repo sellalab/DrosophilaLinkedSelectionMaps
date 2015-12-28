@@ -70,7 +70,9 @@ if ~isempty(BSbase{1})
     
   for a=1:length(BSbase)
     BSparams{a}.u         = BSbase{a}.cfg.u_del; % del mut rate
-    BSparams{a}.t         = BSbase{a}.cfg.FE_grid; % grid of t vals for neg selection
+
+    % edited 12/17 -- must account for the fact that FE_grid is now a set of cells containing t-vals under diff annos
+    BSparams{a}.t         = BSbase{a}.cfg.FE_grid(a,:); % grid of t vals for neg selection
     BSparams{a}.nsites    = BSbase{a}.cfg.anno_len; % number of sites under selection (sites at diff annotations)
   end
   

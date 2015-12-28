@@ -6,7 +6,9 @@ global MLParamsStruct;
 % To prevent zero probability of observing a SNP (which would ruin the
 % maximization) we put a lower bound on the relative predicted diversity to
 % be 0.1% of the maximal value (=1).
-minRed = 0.001; 
+% minRed = 0.001; 
+% try a lower minRed:
+minRed = 0.00001; 
 
 calc_stats = (nargout > 2);
 

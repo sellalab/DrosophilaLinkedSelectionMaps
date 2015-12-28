@@ -213,7 +213,9 @@ if ~isempty(BS_anno_files)
         %       Annots.BS{c}{b}.anno_len           = sum(Annots.BS{c}{b}.iend-Annots.BS{c}{b}.istart+1);
 
           % this function EITHER LOADS the maps from files OR CALCULATES&WRITES them to files
-          [CalcBS, BSbase{c,b}]  = generateBbase(CalcBS, CalcBS.FE_grid, CalcBS.skip_generate_maps);
+          % important edit 12/17 -- now CalcBS.FE_grid is loaded CalcBS.FE_grid{b} because each anno has its own grid
+          % [CalcBS, BSbase{c,b}]  = generateBbase(CalcBS, CalcBS.FE_grid{b}, CalcBS.skip_generate_maps);
+          [CalcBS, BSbase{c,b}]  = generateBbase(CalcBS, CalcBS.FE_grid(b,:), CalcBS.skip_generate_maps);
           BSbase{c,b}.cfg = CalcBS;
           BSbase{c,b}.cfg.anno_len = Annots.BS{c}{b}.anno_len;
 

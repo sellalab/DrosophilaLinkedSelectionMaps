@@ -49,7 +49,7 @@ outcalc.fit             = sparams.fit;
 outcalc.cfg             = cfg_inf;
 outcalc.infiles.var     = file2struct( files_invar_file );
 outcalc.infiles.GEs     = file2struct( files_buildGE_file );
-outcalc.infiles.masks   = file2struct( files_codonmask_file );
+% outcalc.infiles.masks   = file2struct( files_codonmask_file );
 
 struct2file( outcalc, [outfile_pref 'finalresults.txt'] );
 

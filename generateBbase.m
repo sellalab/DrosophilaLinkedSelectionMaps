@@ -69,7 +69,7 @@ config.unique_id = '';
 for k=1:length(t)
 %   'entering createCalcBkgdConfig loop'
     config.Et = t(k);
-    config.output_token = sprintf('%s_t%f', config.name, config.Et);
+    config.output_token = sprintf('%s_t%.8f', config.name, config.Et);
     config.basefiles{k} = sprintf('%s.bkgd', config.output_token); %config.chr_id, 
     config.grid_files{k}= [output_dir config.basefiles{k} '.bkgd']; % something wrong here? I dont see any .bkgd.bkgd files around, maybe an error?
 

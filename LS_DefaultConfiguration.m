@@ -58,7 +58,9 @@ if ~isfield(ncfg.inf, 'fixed_params')
     % Set to 0 anything that will be allowed to vary in the composite likelihood maximization:
     ncfg.inf.fixed_params(1:MLParamsStruct.length) = 1; % fix all parameters in the initial config
     ncfg.inf.fixed_params(MLParamsStruct.tau_pos ) = 0; % TAU: ratio of 1/(pi0): never fix this or the inference won't work 
-    ncfg.inf.fixed_params([MLParamsStruct.bsparam_imasses(1) + [0:2]]) = 0; % just the 3 params for BS right now t = [ 0.1 0.01 0.001 ]
+
+    ncfg.inf.fixed_params([MLParamsStruct.bsparam_imasses(1) + [0:2]]) = 0;
+    ncfg.inf.fixed_params([MLParamsStruct.bsparam_imasses(2) + [0:2]]) = 0;
     
 end
 
@@ -91,7 +93,7 @@ if ~isfield(ncfg, 'smoothgenmap_win'),        ncfg.smoothgenmap_win = 10^-6; ,en
 if ~isfield(ncfg, 'rec_spat_window'),        ncfg.rec_spat_window = 10^5; ,end % DM Note: turned off in current implementation
 
 %% settings for the output
-if ~isfield(ncfg, 'genmap_name'),        ncfg.genmap_name = 'AA_Map'; ,end % this should always correspond to the setting in 'runfilenames'
+% if ~isfield(ncfg, 'genmap_name'),        ncfg.genmap_name = 'AA_Map'; ,end % REMOVE THIS SECTION, NAME IS DEFINED ELSEWHERE
 if ~isfield(ncfg, 'output'),             ncfg.output = []; ,end
 if ~isfield(ncfg.output, 'LSmap_res'),          ncfg.output.LSmap_res = 100; ,end
 if ~isfield(ncfg.output, 'chromosomes'),          ncfg.output.chromosomes = [1:22]; ,end % DM edit chrom number
@@ -112,7 +114,14 @@ if ~isfield(ncfg.GEs.CalcSW, 'min_mapdist_SW_spat_grid'), ncfg.GEs.CalcSW.min_ma
  
 %% BS GE inits:
 if ~isfield(ncfg.GEs,        'CalcBS'),          ncfg.GEs.CalcBS = []; ,end
-if ~isfield(ncfg.GEs.CalcBS, 'FE_grid'),             ncfg.GEs.CalcBS.FE_grid = 10.^-[1:0.25:3.5];          ,end % DM edit min set to 10^-3.5 for more realistic assumptions in humans
+% if ~isfield(ncfg.GEs.CalcBS, 'FE_grid'),             ncfg.GEs.CalcBS.FE_grid = 10.^-[1:0.25:3.5];          ,end % DM edit min set to 10^-3.5 for more realistic assumptions in humans
+
+% conditions where there are TWO different ranges of FE_grids:
+% if ~isfield(ncfg.GEs.CalcBS, 'FE_grid'), ncfg.GEs.CalcBS.FE_grid{1} = 10.^-[2:4]; end  % exonic
+% ncfg.GEs.CalcBS.FE_grid{2} = 10.^-[4.5:0.5:5.5];  % nonexonic
+% TENTATIVE:
+if ~isfield(ncfg.GEs.CalcBS, 'FE_grid'), ncfg.GEs.CalcBS.FE_grid = [10.^-[2.5:0.5:4]; 10.^-[4.5:0.5:6]]; end
+
 if ~isfield(ncfg.GEs.CalcBS, 'u_del'),               ncfg.GEs.CalcBS.u_del      = 7.4*10^-8;           ,end % DM edit: use human mutation rate from Leffler review. This is used in the bkgd program so it has an effect on the results
 if ~isfield(ncfg.GEs.CalcBS, 'skip_generate_maps'),  ncfg.GEs.CalcBS.skip_generate_maps = 0; ,end % DM edit turn off
 if ~isfield(ncfg.GEs.CalcBS, 'B_res'),               ncfg.GEs.CalcBS.B_res = 100; ,end

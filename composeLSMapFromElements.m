@@ -3,8 +3,6 @@ function DivRedPred = composeLSMapFromElements( only_calc_Red, gSWj, gBSj, param
 
 global MLParamsStruct;
 
-
-
 if isempty(gSWj) & isempty(gBSj)
   DivRedPred = [];
   return;
@@ -19,11 +17,9 @@ end
 
 % integrate params from both GEs and inference results
 DivRedPred.params = integrateParams_Inference_N_GEs( params, config, BSbase_params, SWbase_params,      0 );
-% DivRedPred.params = integrateParams_Inference_N_GEs( params, config, BSbase_params, SWbase_params,      1, [2:2:10] );
-
 
 % prepare mutation rate variation proxy
-eTheta0                         = EgMutDiv / DivRedPred.params.tau_div;
+ eTheta0                         = EgMutDiv / DivRedPred.params.tau_div;
 
 %% create basic maps for sweeps and bs
 
@@ -37,18 +33,19 @@ end
 
 % compose the basic map of coalescent due to BS - the minimal calculations possible
 cBS  = zeros([L 1]);
+% length(gBSj) is the # of pre-calc maps used, also same as the number of selection coefs
 for a=1:length(gBSj)
+  % size(gBSj{a},1) is the number of sites, which mirrors number of neutral sites, per pre-calc map
   if sum( DivRedPred.params.BS.w_t_rel{a}(1:size(gBSj{a},1)) ) > 0
-    cBS = cBS + gBSj{a}' * DivRedPred.params.BS.w_t_rel{a}';%(2:2:10)';
+    % tranpose so that inner dimensions agree (i.e. # weights should equal # selection coefs used)
+    cBS = cBS + gBSj{a}' * DivRedPred.params.BS.w_t_rel{a}';
   end
 end
 
 
 %% create individual maps for each effect in isolation (SW and BS)
-
-% these options were originally set off in the example scripts
-% (only_calc_Red was set to 1)
-
+% USED IN FINAL RESULT PRINT OUT
+% FOR CL CALCULATION, EFFECTS ARE COMBINED
 % compose additional maps of coalescent due to SW, by annotation and fitness effect, and also component-specific diversity maps
 
 DivRedPred.cSW        = cSW;
@@ -87,7 +84,6 @@ if ~only_calc_Red & isfield(DivRedPred.params, 'SW') % if only_calc_Red flag is 
   DivRedPred.SWs        = (1 + eTheta0) ./ (1 + DivRedPred.cSWs + eTheta0);
   
 end
-
 
 
 % compose additional maps of coalescent due to BS, by annotation and fitness effect, and also component-specific diversity maps
