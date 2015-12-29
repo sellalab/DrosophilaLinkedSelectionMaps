@@ -89,8 +89,10 @@ end
 
 if ~isempty(params) % this WILL be empty on the initial precalc that brings us here in the beginning of the LH maximization, it is just an empty cell []
 
-  % rig this function to invert gSWj while gSWj is empty:
-  gSWj{1} = gSWj{1}';
+  % 12/17 edit:
+  % rig this function to invert gSWj while gSWj is empty:  <-- turned OFF 12/28
+  % 12/28 edit: turn this OFF
+  % gSWj{1} = gSWj{1}';
   DivRedPred = composeLSMapFromElements( 0, gSWj, gBSj, params, SWparams, BSparams, EgMutDiv, config );
   % compare with logCL call:
   % DivRedPred = composeLSMapFromElements( 1, preCalc{c}.gSWj, preCalc{c}.gBSj, params, preCalc{c}.SWparams, preCalc{c}.BSparams, preCalc{c}.EgMutDiv, config ); % DM edit: set only_calc_Red to 0 for BS or SW only maps

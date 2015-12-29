@@ -11,7 +11,7 @@ param_stats.fit.AIC      = 2*calc.DFs - 2*param_stats.fit.logLH*param_stats.fit.
 if ~isfield(GEs, 'SWbase')
 % VERY patchy here:
   GEs.SWbase = {[]};
-
+end
 
 SWbase_params = [];
 if ~isempty(GEs.SWbase{1})
@@ -47,10 +47,17 @@ else
   param_stats.params = [];
 end
 % edit on 12/18 -- this ensures the data is printed out correctly
-for a=1:size(GEs.BSbase,2)
-    % for output purposes only
-    param_stats.params.BS.v_t = GEs.BSbase{1,a}.cfg.FE_grid(:,:);
-end
+% for a=1:size(GEs.BSbase,2)
+
+% for output purposes only
+param_stats.params.BS.v_t = cat(1, param_stats.params.BS.v_t{:});
+
+% new edits 12/28: to get the weights to print out correctly, pull out
+% of the cell into a matrix of doubles like with v_t
+param_stats.params.BS.w_t = cat(1, param_stats.params.BS.w_t{:});
+param_stats.params.BS.w_t_rel = cat(1, param_stats.params.BS.w_t_rel{:});
+
+% end
 
 % param_stats.params.tau = calc.params(3);
 param_stats.params.pi0_by_d = 1/param_stats.params.tau_div;

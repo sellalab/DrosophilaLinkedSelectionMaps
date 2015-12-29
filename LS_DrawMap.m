@@ -37,18 +37,19 @@ else
   EgMutDiv  = 0;
 end
 
-% patch this up to feed an empty SWbase to composePredictedDiversity:
-% for c=cfg_inf.output.chromosomes
-%     
-%     if ~isfield(GEs, 'SWbase')
-%       GEs.SWbase{c} = {[]};
-%     end
-% 
-%     if ~isfield(GEs, 'gFocGrid')
-%       GEs.gFocGrid{c} = {[]};
-%     end
-%     
-% end
+% patch this up to feed an empty SWbase to composePredictedDiversity <-- no longer applies 12/28
+% edit 12/28: REMOVE the changes here, return to the original rules for SW
+for c=cfg_inf.output.chromosomes
+    
+    if ~isfield(GEs, 'SWbase')
+      GEs.SWbase{c} = {[]};
+    end
+
+    if ~isfield(GEs, 'gFocGrid')
+      GEs.gFocGrid{c} = {[]};
+    end
+    
+end
 
 % C        = length(cfg_inf.output.chromosomes);
 % nSWannos = size( GEs.SWbase, 2 );
@@ -57,8 +58,9 @@ end
 for c=cfg_inf.output.chromosomes
     
     % VERY patchy here:
-      GEs.SWbase(c,:) = {[]};
-      GEs.gFocGrid{c} = {[]};
+    % 12/28 comment these out, handle above with original rules for SW
+    % GEs.SWbase(c,:) = {[]};
+    % GEs.gFocGrid{c} = {[]};
     
   [~, ~, stats.SWparams{c}, stats.BSparams{c}, DivRedPred{c}] = composePredictedDiversity2( GEs.SWbase(c,:), GEs.gFocGrid{c}, GEs.BSbase(c,:), params, cfg_inf.inf, positions{c}, EgMutDiv );
     
