@@ -45,7 +45,7 @@ end
 %% load genetic map
 
 for c=1:C
-  [genmap{c}.pos, genmap{c}.c, genmap{c}.R]  = textread( inputfiles.genmap{c}, '%d\t%f\t%f', 'headerlines', 1 );
+  [genmap{c}.pos, genmap{c}.c, genmap{c}.R]  = textread( inputfiles.genmap{c}, '%d\t%f\t%f', 'commentstyle', 'shell' );
   genmap{c}.file = inputfiles.genmap{c};
   genmap{c}.name = inputfiles.genmap_token;
   

@@ -75,8 +75,8 @@ if ~isempty(BS_anno_files)
         Annots.BS{c}{b}.output_token  = BS_anno_tokens{b};
         Annots.BS{c}{b}.name         = [chr_id{c} '_' BS_anno_tokens{b}];
         Annots.BS{c}{b}.file  = BS_anno_files{c}{b};
-        
-        [~, Annots.BS{c}{b}.istart, Annots.BS{c}{b}.iend] = textread( Annots.BS{c}{b}.file, '%s\t%d\t%d' );
+        Annots.BS{c}{b}.file
+        [~, Annots.BS{c}{b}.istart, Annots.BS{c}{b}.iend] = textread( Annots.BS{c}{b}.file, '%s\t%d\t%d', 'commentstyle', 'shell');
         
         %       Annots.BS{c}{b}.gistart  = applyGenmap2pos( genmap{c}, Annots.BS{c}{b}.istart );
         %       Annots.BS{c}{b}.giend    = applyGenmap2pos( genmap{c}, Annots.BS{c}{b}.iend );

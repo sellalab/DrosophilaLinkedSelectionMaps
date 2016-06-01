@@ -81,9 +81,12 @@ neg_log_P = neg_log_P/neg_log_samples(1) * 10^5;
 %   bigo = 7;
 % end
 
+% [params(59:64) params(71:76) params(83:88) params(95:100) params(107:112) neg_log_P]  % for minimal BS params
+%[params(59:66) params(71:78) params(83:90) params(95:102) neg_log_P]  % for minimal BS params
+% [params(59:66) params(71:78) neg_log_P]  % for minimal BS params
+[params(59:69) neg_log_P]  % for 1 BS annotation only, 11 s-vals
 
-[TAU_div params(59:61) neg_log_P];  % for minimal BS params
-% [TAU_div params(11:2:15) neg_log_P]  % for minimal SW params
+% [TAU_div params(11:15) neg_log_P]  % for minimal SW params
 
 % [params(1) params(3) params(7:end) neg_log_P/1000000] %;params(1) params(3) w_s neg_log_P/1000000
 % [params(1:3) neg_log_P/1000000]

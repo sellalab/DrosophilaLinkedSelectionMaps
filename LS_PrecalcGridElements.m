@@ -44,6 +44,8 @@ for c=1:C
   if isfield(inoutfiles, 'BS_anno2_files'),  BS_anno_files{c}{2} = inoutfiles.BS_anno2_files{c};,  end
   if isfield(inoutfiles, 'BS_anno3_files'),  BS_anno_files{c}{3} = inoutfiles.BS_anno3_files{c};,  end
   if isfield(inoutfiles, 'BS_anno4_files'),  BS_anno_files{c}{4} = inoutfiles.BS_anno4_files{c};,  end
+  if isfield(inoutfiles, 'BS_anno4_files'),  BS_anno_files{c}{5} = inoutfiles.BS_anno5_files{c};,  end
+
 end
 
 

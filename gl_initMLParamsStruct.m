@@ -10,7 +10,7 @@ MLParamsStruct.swparam_annotations = 4; % max number of annotations used, curren
 MLParamsStruct.swparam_annolen = MLParamsStruct.swparam_masses + 1; % 11 positions in the vector for max number of s values, + 1 for ?
 MLParamsStruct.bsparam_offset = MLParamsStruct.swparam_offset + MLParamsStruct.swparam_annolen*MLParamsStruct.swparam_annotations; % start bsparam at position 58 in the vector after the end of swparams
 MLParamsStruct.bsparam_masses = 11; % same max number of s values
-MLParamsStruct.bsparam_annotations = 4; %changed for human DM-- restored to 4
+MLParamsStruct.bsparam_annotations = 5; %changed for human DM-- restored to 4
 MLParamsStruct.bsparam_annolen = MLParamsStruct.bsparam_masses + 1; % same length of 12, 11 s and 1 extra something...
 MLParamsStruct.length = MLParamsStruct.bsparam_offset + (MLParamsStruct.bsparam_masses+1)*MLParamsStruct.bsparam_annotations; % 48 BS + 48 SW params + 10 additional in the beginning
 

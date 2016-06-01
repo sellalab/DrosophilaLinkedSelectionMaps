@@ -59,9 +59,9 @@ if ~isfield(ncfg.inf, 'fixed_params')
     ncfg.inf.fixed_params(1:MLParamsStruct.length) = 1; % fix all parameters in the initial config
     ncfg.inf.fixed_params(MLParamsStruct.tau_pos ) = 0; % TAU: ratio of 1/(pi0): never fix this or the inference won't work 
 
-    ncfg.inf.fixed_params([MLParamsStruct.bsparam_imasses(1) + [0:3]]) = 0;
-    ncfg.inf.fixed_params([MLParamsStruct.bsparam_imasses(2) + [0:3]]) = 0;
-    ncfg.inf.fixed_params([MLParamsStruct.swparam_imasses(1) + [0:2:4]]) = 0;
+    % ncfg.inf.fixed_params([MLParamsStruct.bsparam_imasses(1) + [0:3]]) = 0;
+%    ncfg.inf.fixed_params([MLParamsStruct.bsparam_imasses(2) + [0:3]]) = 0;
+    % ncfg.inf.fixed_params([MLParamsStruct.swparam_imasses(1) + [0:4]]) = 0;
 
     
 end
@@ -109,7 +109,7 @@ if ~isfield(ncfg.GEs.CalcSW, 'InterpMethod'),    ncfg.GEs.CalcSW.InterpMethod  =
 if ~isfield(ncfg.GEs.CalcSW, 'trap_aprx'),       ncfg.GEs.CalcSW.trap_aprx     = 'diffusion'; end  %DURRETT1;
 if ~isfield(ncfg.GEs.CalcSW, 'gMaxDistScaled'),  ncfg.GEs.CalcSW.gMaxDistScaled= 1; end  %scale the radius of maximal summation in proportion to S
 if ~isfield(ncfg.GEs.CalcSW, 'gMaxDist'),        ncfg.GEs.CalcSW.gMaxDist      = 1; end  %if no scaling, absolute distance in morgans, otherwise the proportionality constant between S and maximal radius (0.1 is reasonable given the rule-of-thumb r=0.1s, 1 is very safe)
-if ~isfield(ncfg.GEs.CalcSW, 'FE_grid'),         ncfg.GEs.CalcSW.FE_grid = 10.^-[2:0.5:4]; end 
+if ~isfield(ncfg.GEs.CalcSW, 'FE_grid'),         ncfg.GEs.CalcSW.FE_grid = 10.^-2; end 
 if ~isfield(ncfg.GEs.CalcSW, 'Ne0'),             ncfg.GEs.CalcSW.Ne0 = 1.25*10^4; end % DM edit for human Ne0 ~1.25e4
 if ~isfield(ncfg.GEs.CalcSW, 'skip_generate_maps'),  ncfg.GEs.CalcSW.skip_generate_maps = 0; end % DM edit turn off
 if ~isfield(ncfg.GEs.CalcSW, 'min_mapdist_SW_spat_grid'), ncfg.GEs.CalcSW.min_mapdist_SW_spat_grid = 3*10^-9; end  % this setting influences the spacing of grid elements, this is likely to be important for the change to human data
@@ -118,11 +118,19 @@ if ~isfield(ncfg.GEs.CalcSW, 'min_mapdist_SW_spat_grid'), ncfg.GEs.CalcSW.min_ma
 if ~isfield(ncfg.GEs,        'CalcBS'),          ncfg.GEs.CalcBS = []; ,end
 
 % TENTATIVE:
-if ~isfield(ncfg.GEs.CalcBS, 'FE_grid'), ncfg.GEs.CalcBS.FE_grid = [10.^-[2.5:0.5:4]; 10.^-[4.5:0.5:6]]; end
+% 01/13 -- use the same grid for utr's and cds annotations:
+% if ~isfield(ncfg.GEs.CalcBS, 'FE_grid'), ncfg.GEs.CalcBS.FE_grid = [10.^-[2.5:0.5:4]; 10.^-[3.5:0.5:5]]; end
+% if ~isfield(ncfg.GEs.CalcBS, 'FE_grid'), ncfg.GEs.CalcBS.FE_grid = [10.^-[1.5:0.5:4.5]; 10.^-[3.5:0.5:6.5]]; end
+if ~isfield(ncfg.GEs.CalcBS, 'FE_grid'), ncfg.GEs.CalcBS.FE_grid = [10.^-[2.5:0.5:4.5]; 10.^-[2.5:0.5:4.5]]; end
 
 if ~isfield(ncfg.GEs.CalcBS, 'u_del'),               ncfg.GEs.CalcBS.u_del      = 7.4*10^-8;           ,end % DM edit: use human mutation rate from Leffler review. This is used in the bkgd program so it has an effect on the results
 if ~isfield(ncfg.GEs.CalcBS, 'skip_generate_maps'),  ncfg.GEs.CalcBS.skip_generate_maps = 0; ,end % DM edit turn off
+
+% MAP RESOLUTION FOR BMAPS -- must be adjusted if using higher sensitivity settings from 0-1000
+% added 01/11/16 -- switch to 0-1000 resolution:
+% if ~isfield(ncfg.GEs.CalcBS, 'B_res'),               ncfg.GEs.CalcBS.B_res = 1000; ,end
 if ~isfield(ncfg.GEs.CalcBS, 'B_res'),               ncfg.GEs.CalcBS.B_res = 100; ,end
+
 if ~isfield(ncfg.GEs.CalcBS, 'exe_file'),            ncfg.GEs.CalcBS.exe_file = '/Users/davidmurphy/GoogleDrive/linked_selection/lsm/cpp/bkgd_map/src/calc_bkgd'; ,end % DM edit
 if ~isfield(ncfg.GEs.CalcBS, 't_dist_type'),       ncfg.GEs.CalcBS.t_dist_type = 'POINT'; ,end
 

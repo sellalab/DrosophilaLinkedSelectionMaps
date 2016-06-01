@@ -62,14 +62,16 @@ if isempty(cfg_inf.init_params) % this should be empty under current settings...
   bnd_t_dist.init                         = bnd_t_dist.rangeL; % set everything to lowest settings as the initial parameters
   bnd_t_dist.init(MLParamsStruct.tau_pos) = tau0;
 else
-  bnd_t_dist.init = min( max( cfg_inf.init_params, bnd_t_dist.rangeL ), bnd_t_dist.rangeH );
+  % bnd_t_dist.init = min( max( cfg_inf.init_params, bnd_t_dist.rangeL ), bnd_t_dist.rangeH );  % edited 01/19/16
+  bnd_t_dist.init = min( cfg_inf.init_params, bnd_t_dist.rangeH );
+
 end
 
 
 % for non-fixed selection weight params, make sure they are not null, since initial null values sometimes stuck the optimization
 for k=1:MLParamsStruct.bsparam_annotations % length of 4 since default 4 annos
   pidx = intersect( MLParamsStruct.bsparam_imasses(k)+[0:MLParamsStruct.bsparam_masses-1], find(~bnd_t_dist.fixed) ); % find all non-fixed values and set to some starting value greater than 0
-  bnd_t_dist.init(pidx) = max( -9, bnd_t_dist.init(pidx) ); % initial values for  bsparams;
+  % bnd_t_dist.init(pidx) = max( -9, bnd_t_dist.init(pidx) );  % 01/19/16 -- turn OFF, just use the params I give the inference...
 end
 for k=1:MLParamsStruct.swparam_annotations 
   pidx = intersect( MLParamsStruct.swparam_imasses(k)+[0:MLParamsStruct.swparam_masses-1], find(~bnd_t_dist.fixed) ); % with sw fixed this should return 0 length pidx
