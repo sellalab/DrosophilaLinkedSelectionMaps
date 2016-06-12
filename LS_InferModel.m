@@ -73,7 +73,9 @@ end
 % for non-fixed selection weight params, make sure they are not null, since initial null values sometimes stuck the optimization
 for k=1:MLParamsStruct.bsparam_annotations
   pidx = intersect( MLParamsStruct.bsparam_imasses(k)+[0:MLParamsStruct.bsparam_masses-1], find(~bnd_t_dist.fixed) ); % find all non-fixed values and set to some starting value greater than 0
-  bnd_t_dist.init(pidx) = bnd_t_dist.rangeH;  % EDIT 06/12/16 -- for the non-fixed params, start at the upper bound
+  for i=1:length(pidx)
+    bnd_t_dist.init(i) = bnd_t_dist.rangeH;  % EDIT 06/12/16 -- for the non-fixed params, start at the upper bound
+  end
 end
 
 
