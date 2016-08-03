@@ -15,7 +15,6 @@ else
   y = y(idx);
 end
 
-
 % wins = (x(end)-x(1))/win_jump + 1;
 
 cwindow_size = window_size/window_jump;
