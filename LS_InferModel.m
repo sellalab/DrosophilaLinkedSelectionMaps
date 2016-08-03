@@ -41,7 +41,7 @@ gwEstats = genomewideStatisticsLight( fdata(cfg_inf.chromosomes) ); % contains a
 
 tau0 = (gwEstats.Het/gwEstats.MutProx)^-1; % tau0 is the observed average in the empirical data
 
-bnd_t_dist.fixed = cfg_inf.fixed_params; % fixed params set in LS_DefaultConfiguration will carry over here...
+bnd_t_dist.fixed = cfg_inf.fixed_params % fixed params set in LS_DefaultConfiguration will carry over here...
 
 % these params are boundaries (H and L mean high and low) for different param values
 
@@ -69,13 +69,41 @@ else
 
 end
 
-
 % for non-fixed selection weight params, make sure they are not null, since initial null values sometimes stuck the optimization
 for k=1:MLParamsStruct.bsparam_annotations
-  pidx = intersect( MLParamsStruct.bsparam_imasses(k)+[0:MLParamsStruct.bsparam_masses-1], find(~bnd_t_dist.fixed) ); % find all non-fixed values and set to some starting value greater than 0
-  bnd_t_dist.init(pidx) = log10(10^-6);  % EDIT 06/12/16 -- for the non-fixed params, start at the upper bound
-end
+  pidx = intersect( MLParamsStruct.bsparam_imasses(k)+[0:MLParamsStruct.bsparam_masses-1], find(~bnd_t_dist.fixed) ) % find all non-fixed values and set to some starting value greater than 0
+  % bnd_t_dist.init(pidx) = log10(10^-6);  % EDIT 06/12/16 -- for the non-fixed params, start at the upper bound
+  % bnd_t_dist.init(pidx) = -8  % EDIT 06/12/16 -- for the non-fixed params, start at a middle point
+  bnd_t_dist.init(pidx)  = MLParamsStruct.minimal_log10_t
 
+  % setting initial params for certain variables
+  % pidx = intersect(MLParamsStruct.bsparam_imasses(k)+[0:MLParamsStruct.bsparam_masses-1], [59 60 61])
+  % pidx = intersect(MLParamsStruct.bsparam_imasses(k)+[0:MLParamsStruct.bsparam_masses-1], [59:64])  % t_dist of six values
+  % if pidx
+    % hard-code the best params from primate 92%
+    % message = 'PRIMATE 92%'
+    % bnd_t_dist.init(pidx) = [-9.911607e+00 , -8.650271e+00 , -8.555389e+00 , -8.434589e+00 , -9.018079e+00 , -9.998994e+00]  % EDIT 06/12/16  -- use best result from primate92
+    % message = 'PRIMATE 96%'
+    % bnd_t_dist.init(pidx) = [-8.335991e+00 , -9.352985e+00 , -8.185196e+00 , -8.818694e+00 , -8.489373e+00 , -9.512562e+00]  % EDIT 06/12/16  -- use best result from primate96
+    
+    % set from top values for 96%:
+    % result values: -8.369178e+00 , -8.090082e+00 , -8.382106e+00  
+    % message = 'primate 96 10e-2 free'
+    % bnd_t_dist.init(pidx) = [-10 , -8.090082e+00 , -8.382106e+00]
+    % message = 'primate 96 10e-3 free'
+    % bnd_t_dist.init(pidx) = [-8.369178e+00 , -10 , -8.382106e+00]
+    % message = 'primate 96 10e-4 free'
+    % bnd_t_dist.init(pidx) = [-8.369178e+00 , -8.090082e+00 , -10]
+    % message = 'primate 93 10e-2 and 10e-3 free'
+    % bnd_t_dist.init(pidx) = [-10 , -10 , -8.382106e+00]
+    % six params result for 96%: -8.335991e+00 , -9.352985e+00 , -8.185196e+00 , -8.818694e+00 , -8.489373e+00 , -9.512562e+00
+    % bnd_t_dist.init(pidx) = [-10 , -9.352985e+00 , -10 , -8.818694e+00 , -8.489373e+00 , -9.512562e+00]
+    % six params result for 94@96 best: -9.477780e+00 , -8.843475e+00 , -8.363932e+00 , -8.588303e+00 , -8.766411e+00 , -9.998999e+00
+    % bnd_t_dist.init(pidx) = [-10 , -8.843475e+00 , -10 , -8.588303e+00 , -8.766411e+00 , -9.998999e+00]
+
+  % end
+
+end
 
 for k=1:MLParamsStruct.swparam_annotations 
   pidx = intersect( MLParamsStruct.swparam_imasses(k)+[0:MLParamsStruct.swparam_masses-1], find(~bnd_t_dist.fixed) ); % with sw fixed this should return 0 length pidx
@@ -91,7 +119,6 @@ for k=1:length(cfg_inf.BSanno2param_mapping) % DM edit: change this to run throu
 end
 
 for k=1:length(cfg_inf.SWanno2param_mapping) % DM edit: this edit is the same as for BSbase above, should be safer this way
-
   pidx = MLParamsStruct.swparam_imasses(k)+[length(GEs.SWbase{1,k}.cfg.FE_grid):MLParamsStruct.swparam_masses-1]; % fix everything after the last grid value in SWbase
   bnd_t_dist.fixed(pidx) = 1;
   bnd_t_dist.init(pidx)  = 0;

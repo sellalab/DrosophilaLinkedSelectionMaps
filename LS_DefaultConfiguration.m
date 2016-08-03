@@ -30,6 +30,8 @@ end
 if ~isfield(ncfg,     'inf'),                   ncfg.inf= []; ,end
 if ~isfield(ncfg, 'predef_idx_test'),            ncfg.predef_idx_test = {[],[],[],[]}; ,end % on which sites to run inference, subsets...
 if ~isfield(ncfg, 'chromosomes'),        ncfg.chromosomes = [1:22]; ,end 
+% if ~isfield(ncfg, 'chromosomes'),        ncfg.chromosomes = 1; ,end 
+
 if ~isfield(ncfg,        'GEs'),          ncfg.GEs = []; ,end
 
 
@@ -47,6 +49,7 @@ if ~isfield(ncfg.inf, 'optim_algs'),            ncfg.inf.optim_algs = [1 2 3]; ,
 if ~isfield(ncfg.inf, 'opt_type'), ncfg.inf.opt_type = {'active-set', 'interior-point', 'sqp'};   ,end
 if ~isfield(ncfg.inf, 'fmincon_retries '),      ncfg.inf.fmincon_retries = 0; ,end
 if ~isfield(ncfg.inf, 'chromosomes'),           ncfg.inf.chromosomes = [1:22]; ,end % DM edit for human chroms
+% if ~isfield(ncfg.inf, 'chromosomes'),           ncfg.inf.chromosomes = 1; ,end % DM edit for human chroms  
 if ~isfield(ncfg.inf, 'constraint_u'),          ncfg.inf.constraint_u = 0; ,end % DM edit, set to 0 (no constraint on u_del
 if ~isfield(ncfg.inf, 'use_fake_subs'),         ncfg.inf.use_fake_subs     = 0;,end % DM edit set these to 0
 if ~isfield(ncfg.inf, 'SWanno2param_mapping'),  ncfg.inf.SWanno2param_mapping = [1 2]; ,end % DM edit for just coding/noncoding
@@ -71,6 +74,10 @@ if ~isfield(ncfg.inf, 'chr_id'),
     for i=1:22 % DM edit chromosome number
         ncfg.chr_id{i} = sprintf('chr%d', i);
     end
+  % for i=1:1
+  %   ncfg.chr_id{i} = 'chrX';
+  % end
+  
 end
 
 %% recombination thresholds --> NOT USED IN CURRENT SETTINGS
@@ -99,6 +106,8 @@ if ~isfield(ncfg, 'rec_spat_window'),        ncfg.rec_spat_window = 10^5; ,end %
 if ~isfield(ncfg, 'output'),             ncfg.output = []; ,end
 if ~isfield(ncfg.output, 'LSmap_res'),          ncfg.output.LSmap_res = 100; ,end
 if ~isfield(ncfg.output, 'chromosomes'),          ncfg.output.chromosomes = [1:22]; ,end % DM edit chrom number
+% if ~isfield(ncfg.output, 'chromosomes'),          ncfg.output.chromosomes = 1; ,end % DM edit chrom number
+
 if ~isfield(ncfg.output, 'spatial_resolution'),          ncfg.output.spatial_resolution = 1000; ,end
 
 
