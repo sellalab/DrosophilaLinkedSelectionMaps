@@ -66,10 +66,12 @@ f = fclose(f);
 
 
 f = fopen( file, 'rt' );
-Z = textscan( f, '%d\t%f\t%f', 'commentstyle', {'#'}); %'shell'
+% Z = textscan( f, '%d\t%f\t%f', 'commentstyle', {'#'}); %'shell'
+% no 'fake' field:
+Z = textscan( f, '%d\t%f', 'commentstyle', '#');
 f = fclose(f);
 
-pGrid = Z{1};  SW = double(Z{2});  SWfake = double(Z{3});
+pGrid = Z{1};  SW = double(Z{2});  SWfake = zeros([length(pGrid) 1]);
 
 % [pGrid, SW, SWfake] = textread( file, '%d\t%.3f\t%.3f', 'commentstyle', 'shell');
 

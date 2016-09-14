@@ -116,18 +116,23 @@ if ~isempty(SW_anno_files)
         % formatting: 780428	162	0
         Z = textscan( f, '%d\t%d\t%d', 'commentstyle', 'shell' );
         pos  = Z{1};
-          
-%         pos = textread( pos_grid_files{c}, '%d', 'commentstyle', 'shell' ); % reads the SW_bases file -- change to read from main poly file...
+        
+        % masking out sites that fall outsite of the genetic map limits (or
+        % interp1 will give an a
+        gmask = (pos > genmap{c}.pos(1)) & (pos <  genmap{c}.pos(end));
+        pos = pos(gmask);
+        
+        % pos = textread( pos_grid_files{c}, '%d', 'commentstyle', 'shell' ); % reads the SW_bases file -- change to read from main poly file...
         gpos = applyGenmap2pos( genmap{c}, pos ); % convert all distances to genetic units (in Morgans)
-        
         [gFocGrid{c}.gpos{k}, idx] = thinnedToGrid( gpos, [gdeltaNF(k) g1(c)-gdeltaNF(k) g2(c)+gdeltaNF(k)] );
-        %   gFocGrid{c}.gpos{k} = [g1(c)-gdeltaNF(k):gdeltaNF(k):g2(c)+gdeltaNF(k)];
-        
+        % gFocGrid{c}.gpos{k} = [g1(c)-gdeltaNF(k):gdeltaNF(k):g2(c)+gdeltaNF(k)];
         gFocGrid{c}.pos{k}  = pos(idx);
-        %     gFocGrid{c}.pos{k}  = max(1, min(chr_len(c), round(applyGenmap2pos( genmap{c}, gFocGrid{c}.gpos{k}, 1 )) ));
+        % gFocGrid{c}.pos{k}  = max(1, min(chr_len(c), round(applyGenmap2pos( genmap{c}, gFocGrid{c}.gpos{k}, 1 )) ));
         
       end
+      
     end
+    
   end
  
   

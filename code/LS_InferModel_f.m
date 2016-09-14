@@ -24,14 +24,14 @@ cfg_inf.GEs.CalcSW.skip_generate_maps = 1; % temporary(?), just for safety
 cfg_inf.GEs.CalcBS.skip_generate_maps = 1; % temporary(?), just for safety
 
 
-nvdata            = LS_LoadVariationData(    files_invar_file, cfg_inf );
+nvdata            = LS_LoadVariationData(files_invar_file, cfg_inf );
 % nvdata            = LS_LoadVariationData_memmap(    files_invar_file, cfg_inf );
 
-GEs               = LS_PrecalcGridElements(  files_buildGE_file, cfg_inf );
+GEs               = LS_PrecalcGridElements(files_buildGE_file, cfg_inf );
 % masks             = LS_SetGenomicMask(       files_codonmask_file, cfg_inf );
 % calc              = LS_InferModel(           outfile_pref, nvdata, GEs, cfg_inf.inf, masks.inference );
 masks             = [];  %here we just provide an empty vector for masks so that the function has enough args:
-calc              = LS_InferModel(           outfile_pref, nvdata, GEs, cfg_inf.inf, masks, files_invar_file );  % run without masks, waste of time and space presently...
+calc              = LS_InferModel(outfile_pref, nvdata, GEs, cfg_inf.inf, masks, files_invar_file );  % run without masks, waste of time and space presently...
 
 ii = calc.best_iter;
 if ii==-1

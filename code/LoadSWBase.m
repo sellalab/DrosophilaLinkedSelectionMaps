@@ -6,7 +6,7 @@ coefs = cfg.FE_grid;
 
 for t=1:length(coefs)
 
-  te.inputfiles{t} = sprintf( '%s_t%.6f.sw', input_pref, coefs(t) );
+  te.inputfiles{t} = sprintf( '%s_s%.8f.sw', input_pref, coefs(t) );
 
   [SWbase.gSWj{t}, SWbase.gSWj_fake{t}, gFocGrid.pos{t}, cfg] = loadSWmap( te.inputfiles{t}, cfg );
 

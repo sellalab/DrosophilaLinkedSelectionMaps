@@ -47,14 +47,14 @@ for c=iC
 
   DivRedPred = composeLSMapFromElements( 1, preCalc{c}.gSWj, preCalc{c}.gBSj, params, preCalc{c}.SWparams, preCalc{c}.BSparams, preCalc{c}.EgMutDiv, config ); % DM edit: set only_calc_Red to 0 for BS or SW only maps
   
-  theta0   = preCalc{c}.gMutDiv  / TAU_div; % proxy for 4*Ne*u here?
+  theta0 = preCalc{c}.gMutDiv  / TAU_div; % proxy for 4*Ne*u here?
   
   pi0 = max( theta0./(1+theta0), 10^-5); % neutral pi = theta / 1+ theta (theta should only change if local u changes, currently fixed for human)
   
-  pii        = min( pi0 .* max( DivRedPred.Red, minRed ), 0.99 ); % update the current observed pi based on the diversity reduction factor that has been calculated
+  pii = min( pi0 .* max( DivRedPred.Red, minRed ), 0.99 ); % update the current observed pi based on the diversity reduction factor that has been calculated
   
-  vlogL{c}      = double(preCalc{c}.samplesHom).*log(1-pii) + double(preCalc{c}.samplesHet).*log(pii);
-  cneg_log_P{c}  = -sum(vlogL{c});
+  vlogL{c} = double(preCalc{c}.samplesHom).*log(1-pii) + double(preCalc{c}.samplesHet).*log(pii);
+  cneg_log_P{c} = -sum(vlogL{c});
   
   cneg_log_samples{c} = [preCalc{c}.samplesHomSum+preCalc{c}.samplesHetSum  preCalc{c}.samplesHomSum  preCalc{c}.samplesHetSum];  % [all_sites homo_sites het_sites]
   csites{c} = length(preCalc{c}.samplesHet);
@@ -81,7 +81,7 @@ neg_log_P = neg_log_P/neg_log_samples(1) * 10^5;
 %   bigo = 7;
 % end
 
-[params(59:64) params(71:76) params(83:88) params(95:100) params(107:112) neg_log_P]  % for minimal BS params
+[params(59:64) params(11:16) params(3) neg_log_P]  % for minimal BS params
 %[params(59:66) params(71:78) params(83:90) params(95:102) neg_log_P]  % for minimal BS params
 % [params(59:64) params(71:76) neg_log_P]  % for minimal BS params
 % [params(59:69) neg_log_P]  % for 1 BS annotation only, 11 s-vals

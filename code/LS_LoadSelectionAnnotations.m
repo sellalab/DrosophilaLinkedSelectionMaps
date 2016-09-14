@@ -47,8 +47,11 @@ if ~isempty(SW_anno_files)
 
         % edited 12/27: we don't care about strand or "isfake"
         % formatting of my files: chr1	874672	G	C	NS
-        [~, Annots.SW{c}{b}.focals.pos, ~, ~, ~] = ...
-          textread( Annots.SW{c}{b}.file, '%s\t%d\t%s\t%s\t%s', 'commentstyle', 'shell' );
+%         [~, Annots.SW{c}{b}.focals.pos, ~, ~, ~] = ...
+%         textread( Annots.SW{c}{b}.file, '%s\t%d\t%s\t%s\t%s', 'commentstyle', 'shell' );
+        
+        % edit 09/08/16 to only read one column of integer positions:
+        Annots.SW{c}{b}.focals.pos = textread(Annots.SW{c}{b}.file, '%d', 'commentstyle', 'shell' );
         
         %       Annots.SW{c}{b}.focals.gpos  = applyGenmap2pos( genmap{c}, Annots.SW{c}{b}.focals.pos );
         Annots.SW{c}{b}.anno_len           = length( Annots.SW{c}{b}.focals.pos ); 

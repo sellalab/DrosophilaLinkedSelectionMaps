@@ -35,82 +35,82 @@ while isempty(lien) | (~isempty(lien) & lien~= -1)
   
   if ~isempty(lien) & ~strcmp(lien,'')
     
-  lien = lien(lien~=' ');
-  
-  i = find( lien==';' | lien=='|' , 1);
-  assert( ~isnan(i), 'invalid syntax - no proper field-value separator' );
-  
-  if lien(i)==';'
-    is1x1cell = 0;
-  else
-    is1x1cell = 1;
-  end
-  
-  %   if isempty(i)
-  %
-  %     values = [];
-  %     prefix = lien;
-  %     subfields = strsplit( lien, {'.'} );
-  %
-  %   else
-  
-  prefix = lien(1:i-1);
-  subfields = strsplito( lien(1:i-1), '.' );
-  %   subfields = strsplit( lien(1:i-1), {'.'}, 'CollapseDelimiters', false   );
-  
-  % if strcmp(prefix,'.inf.predef_idx_train')
-  %   bigo = 7;
-  % end
+      lien = lien(lien~=' ');
 
-  cell_rows = strsplito( lien(i+1:end), '|' );
-  %   cell_rows = strsplit( lien(i+1:end), {'|'}, 'CollapseDelimiters', false  );
-  
-  vvalues = [];
-  for l=1:length(cell_rows)
-    
-    cells = strsplito( cell_rows{l}, '!' );
-    %     cells = strsplit( cell_rows{l}, {'!'}, 'CollapseDelimiters', false );
-    
-    for k=1:length(cells)
-      
-      values = strsplito( cells{k}, ',;' );
-      %       values = strsplit( cells{k}, {',',';'}, 'CollapseDelimiters', false   );
-      h = 1 + sum( cells{k}==';' );
-      w = length( values )/h;
-      
-      nums = cellfun( @str2num, values, 'UniformOutput', false );
-      
-      
-      
-      if sum( cellfun( @isempty,nums ) ) == 0
-        % nums
-        values = cell2mat( nums );
-      elseif length(values)==1
-        if isstr(values{1}) & strcmp(values{1}, 'UNSUPPORTED')
-          values = [];
-        else
-          values = values{1};
+      i = find( lien==';' | lien=='|' , 1);
+      assert( ~isnan(i), 'invalid syntax - no proper field-value separator' );
+
+      if lien(i)==';'
+        is1x1cell = 0;
+      else
+        is1x1cell = 1;
+      end
+
+      %   if isempty(i)
+      %
+      %     values = [];
+      %     prefix = lien;
+      %     subfields = strsplit( lien, {'.'} );
+      %
+      %   else
+
+      prefix = lien(1:i-1);
+      subfields = strsplito( lien(1:i-1), '.' );
+      %   subfields = strsplit( lien(1:i-1), {'.'}, 'CollapseDelimiters', false   );
+
+      % if strcmp(prefix,'.inf.predef_idx_train')
+      %   bigo = 7;
+      % end
+
+      cell_rows = strsplito( lien(i+1:end), '|' );
+      %   cell_rows = strsplit( lien(i+1:end), {'|'}, 'CollapseDelimiters', false  );
+
+      vvalues = [];
+      for l=1:length(cell_rows)
+
+        cells = strsplito( cell_rows{l}, '!' );
+        %     cells = strsplit( cell_rows{l}, {'!'}, 'CollapseDelimiters', false );
+
+        for k=1:length(cells)
+
+          values = strsplito( cells{k}, ',;' );
+          %       values = strsplit( cells{k}, {',',';'}, 'CollapseDelimiters', false   );
+          h = 1 + sum( cells{k}==';' );
+          w = length( values )/h;
+
+          nums = cellfun( @str2num, values, 'UniformOutput', false );
+
+
+
+          if sum( cellfun( @isempty,nums ) ) == 0
+            % nums
+            values = cell2mat( nums );
+          elseif length(values)==1
+            if isstr(values{1}) & strcmp(values{1}, 'UNSUPPORTED')
+              values = [];
+            else
+              values = values{1};
+            end
+          end
+
+          if h~=1 | w~=1
+            values = reshape( values, [w h] )'; % this transpose-patch is needed because the series of numbers is read as a 1Xn vector
+          end
+          %   end
+
+          if strcmp(cells{k},'')
+            values = [];
+          end
+          vvalues{l,k} = values;
+
         end
       end
-      
-      if h~=1 | w~=1
-        values = reshape( values, [w h] )'; % this transpose-patch is needed because the series of numbers is read as a 1Xn vector
+      % if the cell matrix has a single cell and its contents is a string, remove cell encapsulation
+      if prod(size(vvalues))==1 & is1x1cell==0
+        vvalues = vvalues{1,1};
       end
-      %   end
-      
-      if strcmp(cells{k},'')
-        values = [];
-      end
-      vvalues{l,k} = values;
-      
-    end
-  end
-  % if the cell matrix has a single cell and its contents is a string, remove cell encapsulation
-  if prod(size(vvalues))==1 & is1x1cell==0
-    vvalues = vvalues{1,1};
-  end
-  
-  s = setfield_rec( s, subfields{2}, subfields(3:end), vvalues );
+
+      s = setfield_rec( s, subfields{2}, subfields(3:end), vvalues );
   
   end
   lien = fgetl( f );

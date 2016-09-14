@@ -22,8 +22,9 @@ pos_max = grid(3);
 % NOTE: this maybe not be sufficient downstream when the positions come
 % back, instead, alter the data or the gmaps themselves so that all neutral
 % sites are within the gmap
-nanfilter = isfinite(pos);
-needed = histc([pos_min:delta:pos_max], [0; pos(nanfilter) ;pos_max + 1]);  % [-Inf; pos ;Inf]
+% nanfilter = isfinite(pos);
+% needed = histc([pos_min:delta:pos_max], [0; pos(nanfilter) ;pos_max + 1]);
+needed = histc([pos_min:delta:pos_max], [0; pos ;pos_max + 1]);
 thinned_i1 = find(needed(1:end-2)>0);
 thinned_i2 = [thinned_i1(2:end)-1  length(pos)];
 

@@ -18,9 +18,7 @@ end
 % just use this old method for now until sscanf is worked out...
 if 0
   base_dir = '/Users/davidmurphy/GoogleDrive/linked_selection/lsm/cluster_mirror/';
-end
-
-if 1
+else
   base_dir = '/ifs/data/c2b2/gs_lab/dam2214/inf/';
 end
 
@@ -89,6 +87,8 @@ for c=1:C
   L = length(Z{1});
   
   fdata{c}.Poly.pos  = Z{1};
+  gmask = (fdata{c}.Poly.pos > fdata{c}.genmap.pos(1)) & (fdata{c}.Poly.pos <  fdata{c}.genmap.pos(end));
+  fdata{c}.Poly.pos = fdata{c}.Poly.pos(gmask)
   fdata{c}.Poly.gpos = applyGenmap2pos( fdata{c}.genmap, fdata{c}.Poly.pos );
   idxS    = find( Z{3} > 0 );
   fdata{c}.Poly.idxS    = idxS;
