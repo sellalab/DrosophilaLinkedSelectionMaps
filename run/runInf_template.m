@@ -1,19 +1,8 @@
   
 if 0
-
-    addpath(genpath('/Users/davidmurphy/GoogleDrive/run_lsm/inf_scripts'))
-    genmap_id = 'AA_Map';
-    neut_suffix = '_mini.txt';
-    mut_files = '_mutrate.txt';
-    t_vals = [10.^-[2:4]; 10.^-[2:4]; 10.^-[2:4]; 10.^-[2:4]];
-    label_out_pref = 'hmm_4an_';
-    coords_type = {'phastCons_txn_merged','phastCons_enh_merged', 'phastCons_pro_merged', 'phastCons_reg_merged'};
-    substitution_type = {'aa_substitutions_nonseg'};
-    map_res = '10kb';
-    
-end
-
-if 1
+    addpath(genpath('/Users/davidmurphy/GoogleDrive/linked_selection/lsm/cluster_mirror/inf_scripts'))
+    label_out_pref = 'local_test_';
+else
     % cluster mode
     addpath(genpath('/ifs/data/c2b2/gs_lab/dam2214/inf/inf_scripts/code/'))
 end
@@ -32,7 +21,7 @@ num_chroms = length(genmap_files);
 
 cfg_inf  = LS_DefaultConfiguration( infcfg_file );
 
-cfg_inf.inf.SWanno2param_mapping  = 1;  % ONE MAPPING FOR NS SUBSTITUTIONS
+cfg_inf.inf.SWanno2param_mapping  = SW_anno_mapping;  % ONE MAPPING FOR NS SUBSTITUTIONS
 cfg_inf.inf.BSanno2param_mapping  = BS_anno_mapping;  % 01/26/16 -- switch off for one bs param w/ phastcons
 
 %% EDIT THE FILES DIR IF NEEDED:
@@ -50,18 +39,9 @@ files_buildGE.outdir            = [base_dir GE_dir];
 %	cfg_inf.GEs.CalcBS.FE_grid{1}     = 10.^-[2:4];
 %	cfg_inf.GEs.CalcBS.FE_grid{2}     = 10.^-[2:4];
 
-%% PROVIDE INITIAL PARAMS:
-
-% get them from a file:
-% if 0  % switch
-% 	params_best = '8pt_retry_best_params.txt';
-% 	ff = fopen(params_best, 'r');
-% 	best_params = fscanf(ff, '%f', [1, 106]);
-% 	cfg_inf.inf.init_params = best_params;
-% end
-
 %% BS GRID:
 cfg_inf.GEs.CalcBS.FE_grid = t_vals; % define based on t_vals cells
+cfg_inf.GEs.CalcSW.FE_grid = s_vals;
 
 
 %% SET FIXED PARAMS
@@ -71,9 +51,10 @@ for i=1:length(BS_free_params)
   % cfg_inf.inf.fixed_params([MLParamsStruct.bsparam_imasses(2) + BS_free_params2]) = 0;
   % cfg_inf.inf.fixed_params([MLParamsStruct.bsparam_imasses(4) + BS_free_params4]) = 0;
 end
-  % cfg_inf.inf.fixed_params([MLParamsStruct.bsparam_imasses(3) + [0:5]]) = 0;  % 03/03/16 two more sets of params for chromHMM annos
-  % cfg_inf.inf.fixed_params([MLParamsStruct.bsparam_imasses(4) + [0:5]]) = 0;
-
+  
+for i=1:length(SW_free_params)
+  cfg_inf.inf.fixed_params([MLParamsStruct.swparam_imasses(i) + SW_free_params{i}]) = 0;
+end
 
 
 %% build Grid Elements (GEs) for BS and SW 

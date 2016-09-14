@@ -2,9 +2,7 @@
 if 0
   % local mode
   base_dir = '/Users/davidmurphy/GoogleDrive/linked_selection/lsm/cluster_mirror/';
-end
-
-if 1
+else
   % cluster mode
   base_dir = '/ifs/data/c2b2/gs_lab/dam2214/inf/';
 end
@@ -34,7 +32,7 @@ end
 % --- no partition
 % coords_type = {'ape_cons98_Segments'}
 % coords_type = {'primate_cons_exnex_merge'}
-coords_type = {'primate_cons95_Segments'}
+coords_type = {'primate_cons95_Segments'};
 % coords_type = {'prosimian_cons98_Segments'}
 % coords_type = {'euarchontoglires_cons90_Segments'}
 % coords_type = {'laurasiatheria_cons90_Segments'}
@@ -54,12 +52,13 @@ coords_type = {'primate_cons95_Segments'}
 % coords_type = {'H1hesc_enh_merged', 'H1hesc_pro_merged', 'H1hesc_txn_merged', 'H1hesc_ins_merged'}
 % coords_type = {'All_enh_merged', 'All_pro_merged', 'All_txn_merged', 'All_ins_merged'}
 
-substitution_type = {'aa_substitutions_nonseg'}
+% substitution_type = {'aa_substitutions_nonseg'}
+substitution_type = {'primate_cons95'};
 
 % --- bs annotations directory
 % BS_anno_dir = 'coords/nr/'
 % BS_anno_dir = 'coords/nr/cons/ape/'
-BS_anno_dir = 'coords/nr/cons/primate/'
+BS_anno_dir = 'coords/nr/cons/primate/';
 % BS_anno_dir = 'coords/nr/cons/prosimian/'
 % BS_anno_dir = 'coords/nr/cons/euarchontoglires/'
 % BS_anno_dir = 'coords/nr/cons/laurasiatheria/'
@@ -73,22 +72,28 @@ BS_anno_dir = 'coords/nr/cons/primate/'
 
 
 % --- bs maps dir
-GE_dir = 'new_bsmaps'
+GE_dir = 'new_bsmaps';
 
 % genetic map id
-genmap_id = 'AAmod'
-map_res = '2kb'
+genmap_id = 'AA_Map';
+map_res = '10kb';
 
 % neutral sites data set to use
-neut_suffix = '_downSample_15pct_neutral.txt'
+neut_suffix = '_downSample_15pct_neutral.txt';
+
+% for local run with downsampled data:
+% neut_suffix = '_downSample_1pct_neutral.txt';
+
 
 % mutation rate correction data set
-mut_files = '_mutrate.txt'
+mut_files = 'rheMac3_mutrate.txt';
 
 % BS_anno_mapping = [1 2 3 4 5];
 % BS_anno_mapping = [1 2 3 4];
 % BS_anno_mapping = [1 2];
 BS_anno_mapping = 1;
+SW_anno_mapping = 1;
+
 
 % --- selection coefs
 % t_vals = [10.^-[2:0.5:4.5]; 10.^-[2:0.5:4.5]; 10.^-[2:0.5:4.5]; 10.^-[2:0.5:4.5]; 10.^-[2:0.5:4.5]];
@@ -97,16 +102,19 @@ BS_anno_mapping = 1;
 % t_vals = [10.^-[1:4]; 10.^-[1:4]; 10.^-[1:4]; 10.^-[1:4]];
 % t_vals = [10.^-[1:0.5:4.5]; 10.^-[1:0.5:4.5]];
 % t_vals = [10.^-[2:0.5:4.5]; 10.^-[2:0.5:4.5]];
-t_vals = [10.^-[2:0.5:4.5]]
+t_vals = 10.^-[2:0.5:4.5];
 % t_vals = [10.^-[2:0.25:4.5]]
 % t_vals = [10.^-[2:4]]
 
-% freeing single params at a time for reduced run w/ 3 t-vals
-% BS_free_params = {[0 2]};
 
+s_vals = 10.^-[2:0.5:4.5];
+
+% freeing single params at a time for reduced run w/ 3 t-vals
+BS_free_params = {[0:5]};
+SW_free_params = {[0:5]};
 
 % BS_free_params = {[0:2]};
-BS_free_params = {[0:5]};
+% BS_free_params = {[0:5]};
 % BS_free_params = {[0:5], [0:5]};
 % BS_free_params = {[0:5], [0:5], [0:5], [0:5]};
 % BS_free_params = {[0:5], [0:5], [0:5], [0:5], [0:5]};
@@ -116,7 +124,7 @@ chr_features_file = [base_dir 'ch_features/chr_len_all.txt'];
 [chr_id, chr_len] = textread(chr_features_file, '%s %d', 'headerlines', 1);
 
 % the number of chromosomes
-C = length(chr_id)
+C = length(chr_id);
 
 %% genetic maps
 genmap_token = sprintf('%s_%s', genmap_id, map_res);
@@ -139,7 +147,7 @@ for i=1:length(substitution_type)
     SW_anno_tokens{i} = substitution_type{i};
 end
 
-SW_anno_fileprefs = [base_dir 'subs/derived_substitutions/'];
+SW_anno_fileprefs = [base_dir 'subs/cons/'];
 
 for i=1:length(coords_type)
     BS_anno_tokens{i} = coords_type{i};  % edited 12/17 -- loop through the coords given on command line externally
@@ -156,8 +164,8 @@ for c=1:C
     BS_anno5_files{c} = '';
 
 
-%    SW_anno1_files{c} = '';
-%    SW_anno2_files{c} = '';
+    SW_anno1_files{c} = '';
+    % SW_anno2_files{c} = '';
 
     % if ~isempty(BS_anno_fileprefs), BS_anno1_files{c} = [BS_anno_fileprefs sprintf('mergecons/%s_%s.bed', chr_id{c}, coords_type{1})]; end 
     if ~isempty(BS_anno_fileprefs), BS_anno1_files{c} = [BS_anno_fileprefs sprintf('segs/%s_%s.bed', chr_id{c}, coords_type{1})]; end 
@@ -178,8 +186,8 @@ for c=1:C
     % if ~isempty(BS_anno_fileprefs), BS_anno4_files{c} = [BS_anno_fileprefs sprintf('peri/%s_%s.bed', chr_id{c}, coords_type{4})]; end
     % if ~isempty(BS_anno_fileprefs), BS_anno5_files{c} = [BS_anno_fileprefs sprintf('utr3/%s_%s.bed', chr_id{c}, coords_type{5})]; end
 
-    if ~isempty(SW_anno_fileprefs), SW_anno1_files{c} = [SW_anno_fileprefs chr_id{c} sprintf('_%s.txt', SW_anno_tokens{1})]; end
-%     if ~isempty(SW_anno_fileprefs), SW_anno2_files{c} = [SW_anno_fileprefs chr_id{c} '.subst.nc'];, end
+    if ~isempty(SW_anno_fileprefs), SW_anno1_files{c} = [SW_anno_fileprefs chr_id{c} sprintf('_%s_substitutions.txt', SW_anno_tokens{1})]; end
+    % if ~isempty(SW_anno_fileprefs), SW_anno2_files{c} = [SW_anno_fileprefs chr_id{c} '.subst.nc'];, end
 
 end
 
@@ -195,17 +203,17 @@ end
 
 for c=1:C
   poly_proc_files{c}       = [base_dir sprintf('neut_poly/%s%s', chr_id{c}, neut_suffix)];
-  MutProx_proc_files{c}    = [base_dir sprintf('subs/mutprox/%s%s', chr_id{c}, mut_files)]; % DM edit
+  MutProx_proc_files{c}    = [base_dir sprintf('subs/mutprox/%s_%s', chr_id{c}, mut_files)]; % DM edit
 end
 
 %% write output to a config .txt file
-infcfg_file = [base_dir sprintf('configs/%s_cfg.txt', label_out_pref)];
+infcfg_file = [base_dir sprintf('configs/%scfg.txt', label_out_pref)];
 
 files_invar.poly           = poly_proc_files;
 files_invar.mutprox        = MutProx_proc_files;
 files_invar.genmap         = genmap_files;
 files_invar.genmap_token   = genmap_token;
-files_invar_file           = [base_dir sprintf('configs/%s_files_invar.txt', label_out_pref)];
+files_invar_file           = [base_dir sprintf('configs/%sfiles_invar.txt', label_out_pref)];
 % files_buildGE.outdir            = [base_dir 'human_GEs']; 
 % files_buildGE.outdir            = [base_dir 'bsmaps_gcons'];  % edited 01/15/16 to try old maps again (edit 01/29/16 -- set in main)
 files_buildGE.outfile_pref      = '';
@@ -223,8 +231,8 @@ files_buildGE.BS_anno1_files = BS_anno1_files;
 % files_buildGE.BS_anno4_files = BS_anno4_files;
 % files_buildGE.BS_anno5_files = BS_anno5_files;
 files_buildGE.BS_anno_tokens = BS_anno_tokens;
-files_buildGE_file           = [base_dir sprintf('configs/%s_files_buildGE.txt',label_out_pref)];
+files_buildGE_file           = [base_dir sprintf('configs/%sfiles_buildGE.txt',label_out_pref)];
 
-files_masks_file             = [base_dir sprintf('configs/%s_files_masks.txt',label_out_pref)];
+files_masks_file             = [base_dir sprintf('configs/%sfiles_masks.txt',label_out_pref)];
 
 files_bootstrap.chr_features_file = chr_features_file;

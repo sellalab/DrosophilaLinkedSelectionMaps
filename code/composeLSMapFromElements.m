@@ -19,15 +19,16 @@ end
 DivRedPred.params = integrateParams_Inference_N_GEs( params, config, BSbase_params, SWbase_params,      0 );
 
 % prepare mutation rate variation proxy
- eTheta0                         = EgMutDiv / DivRedPred.params.tau_div;
+% EgMutDiv = mean mutation rate variation (will be ~1); tau_div = current value of free parameter tau
+ eTheta0 = EgMutDiv / DivRedPred.params.tau_div;
 
 %% create basic maps for sweeps and bs
 
 % compose the basic map of coalescent due to SW - the minimal calculations possible
-cSW  = zeros([L 1]); %
+cSW  = zeros([L 1]);
 for a=1:length(gSWj)
   if sum( DivRedPred.params.SW.coalrate_s{a}(1:size(gSWj{a},1)) ) > 0
-    cSW         = cSW + gSWj{a}' * DivRedPred.params.SW.coalrate_s{a}';%(2:2:10)';
+    cSW = cSW + gSWj{a}' * DivRedPred.params.SW.coalrate_s{a}';%(2:2:10)';
   end
 end
 
@@ -48,7 +49,7 @@ end
 % FOR CL CALCULATION, EFFECTS ARE COMBINED
 % compose additional maps of coalescent due to SW, by annotation and fitness effect, and also component-specific diversity maps
 
-DivRedPred.cSW        = cSW;
+DivRedPred.cSW = cSW;
 
 if ~only_calc_Red & isfield(DivRedPred.params, 'SW') % if only_calc_Red flag is NOT set (i.e. 0), calculate the individual components (?)
   
