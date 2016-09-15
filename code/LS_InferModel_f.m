@@ -19,7 +19,7 @@ function [calc, maps, outcalc]  = LS_InferModel_f( outfile_pref, files_invar_fil
 
 % files_invar   = file2struct( files_invar_file );
 % files_buildGE = file2struct( files_buildGE_file );
-cfg_inf       = file2struct( cfg_file );
+cfg_inf = file2struct(cfg_file);
 cfg_inf.GEs.CalcSW.skip_generate_maps = 1; % temporary(?), just for safety
 cfg_inf.GEs.CalcBS.skip_generate_maps = 1; % temporary(?), just for safety
 

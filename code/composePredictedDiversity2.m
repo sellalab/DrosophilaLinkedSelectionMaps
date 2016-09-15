@@ -59,7 +59,7 @@ if ~isempty(SWbase{1})
     SWparams{a}.remote2closeDiv = config.remote2closeDiv;
   end
   
-else  % some defaults...
+else
   SWparams{1}.s = 1;
   SWparams{1}.Ne0 = 1;
   SWparams{1}.remote2closeDiv = 1;
@@ -72,11 +72,13 @@ if ~isempty(BSbase{1})
     BSparams{a}.u         = BSbase{a}.cfg.u_del; % del mut rate
 
     % edited 12/17 -- must account for the fact that FE_grid is now a set of cells containing t-vals under diff annos
-    BSparams{a}.t         = BSbase{a}.cfg.FE_grid(a,:); % grid of t vals for neg selection
-    BSparams{a}.nsites    = BSbase{a}.cfg.anno_len; % number of sites under selection (sites at diff annotations)
+    % BSparams{a}.t         = BSbase{a}.cfg.FE_grid(a,:);
+    % ^^^ fixed 09/15/16 -- only one FE grid for all annos now ^^^
+    BSparams{a}.t         = BSbase{a}.cfg.FE_grid;
+    BSparams{a}.nsites    = BSbase{a}.cfg.anno_len;
   end
   
-else % some defaults...
+else
   BSparams{1}.u         = 10^-10;
   BSparams{1}.t         = 1;
   BSparams{1}.nsites    = 1;
@@ -94,11 +96,6 @@ if ~isempty(params) % this WILL be empty on the initial precalc that brings us h
   % 12/28 edit: turn this OFF
   % gSWj{1} = gSWj{1}';
   DivRedPred = composeLSMapFromElements( 0, gSWj, gBSj, params, SWparams, BSparams, EgMutDiv, config );
-  % compare with logCL call:
-  % DivRedPred = composeLSMapFromElements( 1, preCalc{c}.gSWj, preCalc{c}.gBSj, params, preCalc{c}.SWparams, preCalc{c}.BSparams, preCalc{c}.EgMutDiv, config ); % DM edit: set only_calc_Red to 0 for BS or SW only maps
-
-  
-  
   DivRedPred.pos = pos;
 
 else

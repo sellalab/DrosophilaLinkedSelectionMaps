@@ -79,7 +79,7 @@ end
 
 % NOTE: the annotations are loaded to 'Annots' in parallel to their
 % usage as inputs to 'generateBbase' through the files
-Annots   = LS_LoadSelectionAnnotations(...  % a large struct containing all of the ns and nc subs and many chromosomal features
+Annots = LS_LoadSelectionAnnotations(...  % a large struct containing all of the ns and nc subs and many chromosomal features
   chr_features_file,...
   chr_id,...
   genmap_files, genmap_token,...
@@ -206,14 +206,13 @@ if ~isempty(BS_anno_files)
     CalcBS.output_pref        = outfile_pref;
 
     for c=1:C
-        CalcBS.rec_table          = genmap_files{c};
+        CalcBS.rec_table   = genmap_files{c};
         CalcBS.chr_id      = chr_id{c};
         CalcBS.chr_len     = chr_len(c);
 
         for b=1:length(BS_anno_tokens) 
 
-          CalcBS.output_token      = Annots.BS{c}{b}.output_token; %BS_anno_tokens{b};
-          % is this right? cons_table is pointing to coding and noncoding segments...
+          CalcBS.output_token = Annots.BS{c}{b}.output_token; %BS_anno_tokens{b};
           CalcBS.cons_table   = Annots.BS{c}{b}.file; %BS_anno_files{c}{b}
           CalcBS.name         = [genmap{c}.name '_' Annots.BS{c}{b}.name];
 
@@ -224,8 +223,9 @@ if ~isempty(BS_anno_files)
 
           % this function EITHER LOADS the maps from files OR CALCULATES&WRITES them to files
           % important edit 12/17 -- now CalcBS.FE_grid is loaded CalcBS.FE_grid{b} because each anno has its own grid
-          % [CalcBS, BSbase{c,b}]  = generateBbase(CalcBS, CalcBS.FE_grid{b}, CalcBS.skip_generate_maps);
-          [CalcBS, BSbase{c,b}]  = generateBbase(CalcBS, CalcBS.FE_grid(b,:), CalcBS.skip_generate_maps);
+          % [CalcBS, BSbase{c,b}] = generateBbase(CalcBS, CalcBS.FE_grid(b,:), CalcBS.skip_generate_maps);
+          % ^^^ de-activated 09/15/16 ^^^ --> use one grid for the entire for all annos now
+          [CalcBS, BSbase{c,b}]  = generateBbase(CalcBS, CalcBS.FE_grid, CalcBS.skip_generate_maps);
           BSbase{c,b}.cfg = CalcBS;
           BSbase{c,b}.cfg.anno_len = Annots.BS{c}{b}.anno_len;
 

@@ -16,19 +16,18 @@ end
 
 
 % integrate params from both GEs and inference results
-DivRedPred.params = integrateParams_Inference_N_GEs( params, config, BSbase_params, SWbase_params,      0 );
+DivRedPred.params = integrateParams_Inference_N_GEs( params, config, BSbase_params, SWbase_params, 0);
 
 % prepare mutation rate variation proxy
-% EgMutDiv = mean mutation rate variation (will be ~1); tau_div = current value of free parameter tau
  eTheta0 = EgMutDiv / DivRedPred.params.tau_div;
 
 %% create basic maps for sweeps and bs
 
 % compose the basic map of coalescent due to SW - the minimal calculations possible
-cSW  = zeros([L 1]);
+cSW  = zeros([L 1]); %
 for a=1:length(gSWj)
   if sum( DivRedPred.params.SW.coalrate_s{a}(1:size(gSWj{a},1)) ) > 0
-    cSW = cSW + gSWj{a}' * DivRedPred.params.SW.coalrate_s{a}';%(2:2:10)';
+    cSW         = cSW + gSWj{a}' * DivRedPred.params.SW.coalrate_s{a}';%(2:2:10)';
   end
 end
 
