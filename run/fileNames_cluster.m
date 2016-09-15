@@ -55,21 +55,9 @@ coords_type = {'primate_cons95_Segments'};
 % substitution_type = {'aa_substitutions_nonseg'}
 substitution_type = {'primate_cons95'};
 
-% --- bs annotations directory
-% BS_anno_dir = 'coords/nr/'
-% BS_anno_dir = 'coords/nr/cons/ape/'
+% annotations directory
 BS_anno_dir = 'coords/nr/cons/primate/';
-% BS_anno_dir = 'coords/nr/cons/prosimian/'
-% BS_anno_dir = 'coords/nr/cons/euarchontoglires/'
-% BS_anno_dir = 'coords/nr/cons/laurasiatheria/'
-% BS_anno_dir = 'coords/nr/cons/afrotheria/'
-% BS_anno_dir = 'coords/nr/cons/mammal/'
-% BS_anno_dir = 'coords/nr/cons/birds/'
-% BS_anno_dir = 'coords/nr/cons/fish/'
-% BS_anno_dir = 'coords/nr/cons/lamprey/'
-% BS_anno_dir = 'coords/hmm/'
-% BS_anno_dir = 'coords/cadd/'
-
+SW_anno_dir = 'subs/cons/';
 
 % --- bs maps dir
 GE_dir = 'new_bsmaps';
@@ -86,7 +74,7 @@ neut_suffix = '_downSample_15pct_neutral.txt';
 
 
 % mutation rate correction data set
-mut_files = 'rheMac3_mutrate.txt';
+mut_files = 'mutrate.txt';
 
 % BS_anno_mapping = [1 2 3 4 5];
 % BS_anno_mapping = [1 2 3 4];
@@ -108,6 +96,7 @@ t_vals = 10.^-[2:0.5:4.5];
 
 
 s_vals = 10.^-[2:0.5:4.5];
+% s_vals = 0.01
 
 % freeing single params at a time for reduced run w/ 3 t-vals
 BS_free_params = {[0:5]};
@@ -137,17 +126,11 @@ end
 
 %% selection annotation labels:
 
-% modified to be completely shut off 9/28/15
-% SW_anno_tokens = {...
-% 'utr5_nonsynonymous',... % these correspond to the .sw files, must match
-% 'non_coding' };
-
-
 for i=1:length(substitution_type)
     SW_anno_tokens{i} = substitution_type{i};
 end
 
-SW_anno_fileprefs = [base_dir 'subs/cons/'];
+SW_anno_fileprefs = [base_dir SW_anno_dir];
 
 for i=1:length(coords_type)
     BS_anno_tokens{i} = coords_type{i};  % edited 12/17 -- loop through the coords given on command line externally
@@ -214,8 +197,6 @@ files_invar.mutprox        = MutProx_proc_files;
 files_invar.genmap         = genmap_files;
 files_invar.genmap_token   = genmap_token;
 files_invar_file           = [base_dir sprintf('configs/%sfiles_invar.txt', label_out_pref)];
-% files_buildGE.outdir            = [base_dir 'human_GEs']; 
-% files_buildGE.outdir            = [base_dir 'bsmaps_gcons'];  % edited 01/15/16 to try old maps again (edit 01/29/16 -- set in main)
 files_buildGE.outfile_pref      = '';
 files_buildGE.chr_features_file = chr_features_file;
 files_buildGE.chr_id            = chr_id; 

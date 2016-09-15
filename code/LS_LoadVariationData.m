@@ -87,8 +87,8 @@ for c=1:C
   L = length(Z{1});
   
   fdata{c}.Poly.pos  = Z{1};
-  gmask = (fdata{c}.Poly.pos > fdata{c}.genmap.pos(1)) & (fdata{c}.Poly.pos <  fdata{c}.genmap.pos(end));
-  fdata{c}.Poly.pos = fdata{c}.Poly.pos(gmask)
+  % gmask = (fdata{c}.Poly.pos > fdata{c}.genmap.pos(1)) & (fdata{c}.Poly.pos <  fdata{c}.genmap.pos(end));
+  % fdata{c}.Poly.pos = fdata{c}.Poly.pos(gmask);
   fdata{c}.Poly.gpos = applyGenmap2pos( fdata{c}.genmap, fdata{c}.Poly.pos );
   idxS    = find( Z{3} > 0 );
   fdata{c}.Poly.idxS    = idxS;
