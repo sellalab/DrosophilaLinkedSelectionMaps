@@ -26,25 +26,37 @@ pos_grid_files    = inoutfiles.pos_grid_files;
 genmap_files      = inoutfiles.genmap_files;
 genmap_token      = inoutfiles.genmap_token;
 
-if isfield(inoutfiles,'SW_anno_tokens'), SW_anno_tokens    = inoutfiles.SW_anno_tokens;, else, SW_anno_tokens = [];, end
-if isfield(inoutfiles,'BS_anno_tokens'), BS_anno_tokens    = inoutfiles.BS_anno_tokens;, else, BS_anno_tokens = [];, end
+if isfield(inoutfiles,'SW_anno_tokens'), SW_anno_tokens = inoutfiles.SW_anno_tokens;, else, SW_anno_tokens = [];, end
+if isfield(inoutfiles,'BS_anno_tokens'), BS_anno_tokens = inoutfiles.BS_anno_tokens;, else, BS_anno_tokens = [];, end
 
 SW_anno_files = [];
 BS_anno_files = [];
 C = length(chr_id);
-for c=1:C % DM edit: only 2 annos to run currently:
-  if isfield(inoutfiles, 'SW_anno1_files'),  SW_anno_files{c}{1} = inoutfiles.SW_anno1_files{c};,  end 
-  if isfield(inoutfiles, 'SW_anno2_files'),  SW_anno_files{c}{2} = inoutfiles.SW_anno2_files{c};,  end
-  if isfield(inoutfiles, 'SW_anno3_files'),  SW_anno_files{c}{3} = inoutfiles.SW_anno3_files{c};,  end
-  if isfield(inoutfiles, 'SW_anno4_files'),  SW_anno_files{c}{4} = inoutfiles.SW_anno4_files{c};,  end
+for c=1:C
+  % just check for a file name in the first position, if none, continue
+  if ~isempty(inoutfiles.SW_anno1_files{1}), SW_anno_files{c}{1} = inoutfiles.SW_anno1_files{c}; end
+  if ~isempty(inoutfiles.SW_anno2_files{1}), SW_anno_files{c}{2} = inoutfiles.SW_anno2_files{c}; end
+  if ~isempty(inoutfiles.SW_anno3_files{1}), SW_anno_files{c}{3} = inoutfiles.SW_anno3_files{c}; end
+  if ~isempty(inoutfiles.SW_anno4_files{1}), SW_anno_files{c}{4} = inoutfiles.SW_anno4_files{c}; end
+
+%   if isfield(inoutfiles, 'SW_anno1_files'),  SW_anno_files{c}{1} = inoutfiles.SW_anno1_files{c};,  end
+%   if isfield(inoutfiles, 'SW_anno2_files'),  SW_anno_files{c}{2} = inoutfiles.SW_anno2_files{c};,  end
+%   if isfield(inoutfiles, 'SW_anno3_files'),  SW_anno_files{c}{3} = inoutfiles.SW_anno3_files{c};,  end
+%   if isfield(inoutfiles, 'SW_anno4_files'),  SW_anno_files{c}{4} = inoutfiles.SW_anno4_files{c};,  end
 end
 
 for c=1:C
-  if isfield(inoutfiles, 'BS_anno1_files'),  BS_anno_files{c}{1} = inoutfiles.BS_anno1_files{c};,  end 
-  if isfield(inoutfiles, 'BS_anno2_files'),  BS_anno_files{c}{2} = inoutfiles.BS_anno2_files{c};,  end
-  if isfield(inoutfiles, 'BS_anno3_files'),  BS_anno_files{c}{3} = inoutfiles.BS_anno3_files{c};,  end
-  if isfield(inoutfiles, 'BS_anno4_files'),  BS_anno_files{c}{4} = inoutfiles.BS_anno4_files{c};,  end
-  if isfield(inoutfiles, 'BS_anno5_files'),  BS_anno_files{c}{5} = inoutfiles.BS_anno5_files{c};,  end
+  if ~isempty(inoutfiles.BS_anno1_files{1}), BS_anno_files{c}{1} = inoutfiles.BS_anno1_files{c}; end
+  if ~isempty(inoutfiles.BS_anno2_files{1}), BS_anno_files{c}{2} = inoutfiles.BS_anno2_files{c}; end
+  if ~isempty(inoutfiles.BS_anno3_files{1}), BS_anno_files{c}{3} = inoutfiles.BS_anno3_files{c}; end
+  if ~isempty(inoutfiles.BS_anno4_files{1}), BS_anno_files{c}{4} = inoutfiles.BS_anno4_files{c}; end
+  if ~isempty(inoutfiles.BS_anno5_files{1}), BS_anno_files{c}{5} = inoutfiles.BS_anno5_files{c}; end
+
+%   if isfield(inoutfiles, 'BS_anno1_files'),  BS_anno_files{c}{1} = inoutfiles.BS_anno1_files{c};,  end
+%   if isfield(inoutfiles, 'BS_anno2_files'),  BS_anno_files{c}{2} = inoutfiles.BS_anno2_files{c};,  end
+%   if isfield(inoutfiles, 'BS_anno3_files'),  BS_anno_files{c}{3} = inoutfiles.BS_anno3_files{c};,  end
+%   if isfield(inoutfiles, 'BS_anno4_files'),  BS_anno_files{c}{4} = inoutfiles.BS_anno4_files{c};,  end
+%   if isfield(inoutfiles, 'BS_anno5_files'),  BS_anno_files{c}{5} = inoutfiles.BS_anno5_files{c};,  end
 
 end
 

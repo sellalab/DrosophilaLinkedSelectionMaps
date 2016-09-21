@@ -30,7 +30,7 @@ nvdata            = LS_LoadVariationData(files_invar_file, cfg_inf );
 GEs               = LS_PrecalcGridElements(files_buildGE_file, cfg_inf );
 % masks             = LS_SetGenomicMask(       files_codonmask_file, cfg_inf );
 % calc              = LS_InferModel(           outfile_pref, nvdata, GEs, cfg_inf.inf, masks.inference );
-masks             = [];  %here we just provide an empty vector for masks so that the function has enough args:
+masks             = [];  % here we just provide an empty vector for masks so that the function has enough args:
 calc              = LS_InferModel(outfile_pref, nvdata, GEs, cfg_inf.inf, masks, files_invar_file );  % run without masks, waste of time and space presently...
 
 ii = calc.best_iter;
@@ -39,9 +39,9 @@ if ii==-1
 end
 params = calc.params(ii,:);
 
-maps = LS_DrawMap(              outfile_pref, params, GEs, [], cfg_inf );
+maps = LS_DrawMap(outfile_pref, params, GEs, [], cfg_inf);
 
-sparams   = collectParams( calc, GEs, cfg_inf.inf );
+sparams = collectParams(calc, GEs, cfg_inf.inf);
 
 outcalc.vparams         = calc.params;
 outcalc.params          = sparams.params;
@@ -51,7 +51,7 @@ outcalc.infiles.var     = file2struct( files_invar_file );
 outcalc.infiles.GEs     = file2struct( files_buildGE_file );
 % outcalc.infiles.masks   = file2struct( files_codonmask_file );
 
-struct2file( outcalc, [outfile_pref 'finalresults.txt'] );
+struct2file(outcalc, [outfile_pref 'finalresults.txt'] );
 
 
 end

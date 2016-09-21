@@ -11,209 +11,163 @@ end
 % EVERYTHING BELOW THIS POINT SHOULD WORK IN BOTH CLUSTER MODE AND LOCAL MODE
 %%
 
-% params to change depending on annos and number of annos
-% coords_type = {'phastCons_codingSegments', 'phastCons_utrSegments', 'phastCons_nearExonSegments', 'phastCons_nonPeriExonicSegments'}
-% coords_type = {'random_1', 'random_2'}
-% coords_type = {'primateCons_exonSegments', 'primateCons_nonexonicSegments'}
-% coords_type = {'phastCons_exonSegments', 'phastCons_nonexonicSegments'}
+%% constans for dmel vs. human data
+ne_human = 12500.0;  %(based on YRI)
+BS_u_del_human = 7.4e-8;
+max_udel_human = 1e-7;
+ne_dmel    = 1140800.0;
+BS_u_del_dmel = 3.5*10^-9;
+max_u_del_dmel = 6.8e-9;
 
-% --- exon/nonexon partition
-% coords_type = {'ape_cons_exonSegments', 'ape_cons_nonexonSegments'}
-% coords_type = {'primate_cons_exonSegments', 'primate_cons_nonexonSegments'}
-% coords_type = {'prosimian_cons_exonSegments', 'prosimian_cons_nonexonSegments'}
-% coords_type = {'euarchontoglires_cons_exonSegments', 'euarchontoglires_cons_nonexonSegments'}
-% coords_type = {'laurasiatheria_cons_exonSegments', 'laurasiatheria_cons_nonexonSegments'}
-% coords_type = {'afrotheria_cons_exonSegments', 'afrotheria_cons_nonexonSegments'}
-% coords_type = {'mammal_cons_exonSegments', 'mammal_cons_nonexonSegments'}
-% coords_type = {'birds_cons_exonSegments', 'birds_cons_nonexonSegments'}
-% coords_type = {'fish_cons_exonSegments', 'fish_cons_nonexonSegments'}
-% coords_type = {'lamprey_cons_exonSegments', 'lamprey_cons_nonexonSegments'}
+%% top level variables
+% -> these set additional variables by string combinations, length of arrays, etc
 
-% --- no partition
-% coords_type = {'ape_cons98_Segments'}
-% coords_type = {'primate_cons_exnex_merge'}
-coords_type = {'primate_cons95_Segments'};
-% coords_type = {'prosimian_cons98_Segments'}
-% coords_type = {'euarchontoglires_cons90_Segments'}
-% coords_type = {'laurasiatheria_cons90_Segments'}
-% coords_type = {'afrotheria_cons90_Segments'}
-% coords_type = {'mammal_cons90_Segments'}
-% coords_type = {'birds_cons90_Segments'}
-% coords_type = {'fish_cons90_Segments'}
-% coords_type = {'lamprey_cons90_Segments'}
-% coords_type = {'cadd_cons'}
-
-
-% --- coords from tss, utr5, cds, peri, utr3:
-% coords_type = {'knownGene_nonredundant_tssSegments', 'knownGene_nonredundant_utr5Segments', 'knownGene_nonredundant_codingSegments', 'knownGene_nonredundant_periSegments', 'knownGene_nonredundant_utr3Segments'}
-
-% --- chromHMM coords
-% coords_type = {'H1hesc_enh_merged', 'H1hesc_pro_merged', 'H1hesc_txn_merged', 'H1hesc_ins_merged', 'H1hesc_rep_merged'}
-% coords_type = {'H1hesc_enh_merged', 'H1hesc_pro_merged', 'H1hesc_txn_merged', 'H1hesc_ins_merged'}
-% coords_type = {'All_enh_merged', 'All_pro_merged', 'All_txn_merged', 'All_ins_merged'}
-
-% substitution_type = {'aa_substitutions_nonseg'}
-substitution_type = {'primate_cons95'};
-
-% annotations directory
+% annotations for bs and cs
+BS_anno_tokens = {'primate_cons_exonSegments', 'primate_cons_nonexonSegments'};
+% BS_anno_tokens = {'primate_cons95_Segments'};
+SW_anno_tokens = {'primate_cons95'};
+% there must be at least one annotation for the run to start
+assert(~isempty(BS_anno_tokens) | ~isempty(SW_anno_tokens));
+% bs and cs coefficients (set to the same range)
+t_vals = 10.^-[2:0.5:4.5];
+s_vals = 0.01;
+% constants (set in defaults, may be reset here)
+effective_pop_size = ne_human;
+BS_u_del = BS_u_del_human;
+max_u_del = max_udel_human;
+% annotations directories
 BS_anno_dir = 'coords/nr/cons/primate/';
 SW_anno_dir = 'subs/cons/';
-
-% --- bs maps dir
+% pre-calculated grid dirs
 GE_dir = 'new_bsmaps';
-
 % genetic map id
-genmap_id = 'AA_Map';
-map_res = '10kb';
-
+genmap_token = 'AA_Map_10kb';
 % neutral sites data set to use
-neut_suffix = '_downSample_15pct_neutral.txt';
-
-% for local run with downsampled data:
-% neut_suffix = '_downSample_1pct_neutral.txt';
-
-
+% neut_suffix = 'downSample_15pct_neutral';
+neut_suffix = 'downSample_1pct_neutral'; % local downsampled version
 % mutation rate correction data set
-mut_files = 'mutrate.txt';
-
-% BS_anno_mapping = [1 2 3 4 5];
-% BS_anno_mapping = [1 2 3 4];
-% BS_anno_mapping = [1 2];
-BS_anno_mapping = 1;
-SW_anno_mapping = 1;
-
-
-% --- selection coefs
-% t_vals = [10.^-[2:0.5:4.5]; 10.^-[2:0.5:4.5]; 10.^-[2:0.5:4.5]; 10.^-[2:0.5:4.5]; 10.^-[2:0.5:4.5]];
-% t_vals = [10.^-[2:0.5:4.5]; 10.^-[2:0.5:4.5]; 10.^-[2:0.5:4.5]; 10.^-[2:0.5:4.5]];
-% t_vals = [10.^-[1:0.5:4.5]; 10.^-[1:0.5:4.5]; 10.^-[1:0.5:4.5]; 10.^-[1:0.5:4.5]];
-% t_vals = [10.^-[1:4]; 10.^-[1:4]; 10.^-[1:4]; 10.^-[1:4]];
-% t_vals = [10.^-[1:0.5:4.5]; 10.^-[1:0.5:4.5]];
-% t_vals = [10.^-[2:0.5:4.5]; 10.^-[2:0.5:4.5]];
-t_vals = 10.^-[2:0.5:4.5];
-% t_vals = [10.^-[2:0.25:4.5]]
-% t_vals = [10.^-[2:4]]
-
-
-s_vals = 10.^-[2:0.5:4.5];
-% s_vals = 0.01
-
-% freeing single params at a time for reduced run w/ 3 t-vals
-BS_free_params = {[0:5]};
-SW_free_params = {[0:5]};
-
-% BS_free_params = {[0:2]};
-% BS_free_params = {[0:5]};
-% BS_free_params = {[0:5], [0:5]};
-% BS_free_params = {[0:5], [0:5], [0:5], [0:5]};
-% BS_free_params = {[0:5], [0:5], [0:5], [0:5], [0:5]};
-
-%% chromosomes
+mut_files = 'mutrate';
+% chromosome lengths file
 chr_features_file = [base_dir 'ch_features/chr_len_all.txt'];
+
+%% dependent param settings
+
+% param mappings per anno (matches number of annotations per bs/cs)
+BS_anno_mapping = 1:length(BS_anno_tokens);
+SW_anno_mapping = 1:length(SW_anno_tokens);
+% free params within the vector of bs and cs params
+for i=1:length(BS_anno_mapping)
+  BS_free_params{i} = 0:length(t_vals);  % all coeffs for all tokens freed
+end
+for i=1:length(SW_anno_mapping)
+%   SW_free_params{i} = 0:length(s_vals);  % all coeffs for all tokens freed
+  SW_free_params{i} = [];  % no params freed
+end
+
+
+%% file paths
+
+% chromosome data
 [chr_id, chr_len] = textread(chr_features_file, '%s %d', 'headerlines', 1);
+C = length(chr_id);  % num chroms
 
-% the number of chromosomes
-C = length(chr_id);
-
-%% genetic maps
-genmap_token = sprintf('%s_%s', genmap_id, map_res);
-
-% write a list of genetic map files including full dir:
+% genetic map files
 for c=1:C
-	genmap_files{c} = [base_dir sprintf('maps/%s/%s_%s_window_hg19.txt',genmap_id, chr_id{c}, genmap_token)];
-end 
-
-
-%% selection annotation labels:
-
-for i=1:length(substitution_type)
-    SW_anno_tokens{i} = substitution_type{i};
+	genmap_files{c} = [base_dir sprintf('maps/%s/%s_%s_window_hg19.txt',genmap_token, chr_id{c}, genmap_token)];
 end
-
-SW_anno_fileprefs = [base_dir SW_anno_dir];
-
-for i=1:length(coords_type)
-    BS_anno_tokens{i} = coords_type{i};  % edited 12/17 -- loop through the coords given on command line externally
-end
-
-BS_anno_fileprefs = [base_dir BS_anno_dir];
-
+% polymorphism data
 for c=1:C
-    
-    BS_anno1_files{c} = '';
-    BS_anno2_files{c} = '';
-    BS_anno3_files{c} = '';
-    BS_anno4_files{c} = '';
-    BS_anno5_files{c} = '';
-
-
-    SW_anno1_files{c} = '';
-    % SW_anno2_files{c} = '';
-
-    % if ~isempty(BS_anno_fileprefs), BS_anno1_files{c} = [BS_anno_fileprefs sprintf('mergecons/%s_%s.bed', chr_id{c}, coords_type{1})]; end 
-    if ~isempty(BS_anno_fileprefs), BS_anno1_files{c} = [BS_anno_fileprefs sprintf('segs/%s_%s.bed', chr_id{c}, coords_type{1})]; end 
-    % if ~isempty(BS_anno_fileprefs), BS_anno1_files{c} = [BS_anno_fileprefs sprintf('%s_%s.bed', chr_id{c}, coords_type{1})]; end 
-
-    % if ~isempty(BS_anno_fileprefs), BS_anno1_files{c} = [BS_anno_fileprefs sprintf('ex/%s_%s.bed', chr_id{c}, coords_type{1})]; end 
-    % if ~isempty(BS_anno_fileprefs), BS_anno2_files{c} = [BS_anno_fileprefs sprintf('nex/%s_%s.bed', chr_id{c}, coords_type{2})]; end
-
-    % if ~isempty(BS_anno_fileprefs), BS_anno1_files{c} = [BS_anno_fileprefs sprintf('enh/%s_%s.bed', chr_id{c}, coords_type{1})]; end 
-    % if ~isempty(BS_anno_fileprefs), BS_anno2_files{c} = [BS_anno_fileprefs sprintf('pro/%s_%s.bed', chr_id{c}, coords_type{2})]; end
-    % if ~isempty(BS_anno_fileprefs), BS_anno3_files{c} = [BS_anno_fileprefs sprintf('txn/%s_%s.bed', chr_id{c}, coords_type{3})]; end
-    % if ~isempty(BS_anno_fileprefs), BS_anno4_files{c} = [BS_anno_fileprefs sprintf('ins/%s_%s.bed', chr_id{c}, coords_type{4})]; end
-    % if ~isempty(BS_anno_fileprefs), BS_anno5_files{c} = [BS_anno_fileprefs sprintf('rep/%s_%s.bed', chr_id{c}, coords_type{5})]; end
-
-    % if ~isempty(BS_anno_fileprefs), BS_anno1_files{c} = [BS_anno_fileprefs sprintf('tss/%s_%s.bed', chr_id{c}, coords_type{1})]; end 
-    % if ~isempty(BS_anno_fileprefs), BS_anno2_files{c} = [BS_anno_fileprefs sprintf('utr5/%s_%s.bed', chr_id{c}, coords_type{2})]; end
-    % if ~isempty(BS_anno_fileprefs), BS_anno3_files{c} = [BS_anno_fileprefs sprintf('cds/%s_%s.bed', chr_id{c}, coords_type{3})]; end
-    % if ~isempty(BS_anno_fileprefs), BS_anno4_files{c} = [BS_anno_fileprefs sprintf('peri/%s_%s.bed', chr_id{c}, coords_type{4})]; end
-    % if ~isempty(BS_anno_fileprefs), BS_anno5_files{c} = [BS_anno_fileprefs sprintf('utr3/%s_%s.bed', chr_id{c}, coords_type{5})]; end
-
-    if ~isempty(SW_anno_fileprefs), SW_anno1_files{c} = [SW_anno_fileprefs chr_id{c} sprintf('_%s_substitutions.txt', SW_anno_tokens{1})]; end
-    % if ~isempty(SW_anno_fileprefs), SW_anno2_files{c} = [SW_anno_fileprefs chr_id{c} '.subst.nc'];, end
-
+  poly_proc_files{c}       = [base_dir sprintf('neut_poly/%s_%s.txt', chr_id{c}, neut_suffix)];
+  MutProx_proc_files{c}    = [base_dir sprintf('subs/mutprox/%s_%s.txt', chr_id{c}, mut_files)];
 end
 
-% prepare CS grid file names (these are lists of positions at which to calculate the efects of CS, instead of using a fixed-distance grid)
+% SW_pos_grid_files: these are lists of positions at which to calculate the efects of CS
+% ** Note: if neutral sites are filtered for likelihood calculations (e.g. for low cmmb),
+% the full set of neutral sites should still be used for calculating the effects of CS
+% otherwise SW_pos_grid_files can just be set to the set of neutral sites
 for c=1:C
 % use positions from neutral poly file:
-  SWbase_pos_grid_files{c} = [base_dir sprintf('neut_poly/%s%s', chr_id{c}, neut_suffix)];
+  SWbase_pos_grid_files{c} = poly_proc_files{c};
+  % SWbase_pos_grid_files{c} = [base_dir sprintf('neut_poly/%s_%s.txt', chr_id{c}, neut_suffix)];
 end
 
+% annotation files
+BS_anno_fileprefs = [base_dir BS_anno_dir];
+SW_anno_fileprefs = [base_dir SW_anno_dir];
 
+% default empty cells for each anno
+BS_anno1_files = cell(1,C);
+BS_anno2_files = cell(1,C);
+BS_anno3_files = cell(1,C);
+BS_anno4_files = cell(1,C);
+BS_anno5_files = cell(1,C);
 
-%% variation data
+SW_anno1_files = cell(1,C);
+SW_anno2_files = cell(1,C);
+SW_anno3_files = cell(1,C);
+SW_anno4_files = cell(1,C);
 
 for c=1:C
-  poly_proc_files{c}       = [base_dir sprintf('neut_poly/%s%s', chr_id{c}, neut_suffix)];
-  MutProx_proc_files{c}    = [base_dir sprintf('subs/mutprox/%s_%s', chr_id{c}, mut_files)]; % DM edit
+
+    % store bs file paths
+    if ~isempty(BS_anno_tokens)
+      BS_anno1_files{c} = [BS_anno_fileprefs sprintf('ex/%s_%s.bed', chr_id{c}, BS_anno_tokens{1})];
+    end
+    if length(BS_anno_tokens) > 1
+      BS_anno2_files{c} = [BS_anno_fileprefs sprintf('nex/%s_%s.bed', chr_id{c}, BS_anno_tokens{2})];
+    end
+    if length(BS_anno_tokens) > 2
+      BS_anno3_files{c} = [BS_anno_fileprefs sprintf('segs/%s_%s.bed', chr_id{c}, BS_anno_tokens{3})];
+    end
+    if length(BS_anno_tokens) > 3
+      BS_anno4_files{c} = [BS_anno_fileprefs sprintf('segs/%s_%s.bed', chr_id{c}, BS_anno_tokens{4})];
+    end
+    if length(BS_anno_tokens) > 4
+      BS_anno5_files{c} = [BS_anno_fileprefs sprintf('segs/%s_%s.bed', chr_id{c}, BS_anno_tokens{5})];
+    end
+    % store cs file paths
+    if ~isempty(SW_anno_tokens)
+      SW_anno1_files{c} = [SW_anno_fileprefs chr_id{c} sprintf('_%s_substitutions.txt', SW_anno_tokens{1})];
+    end
+    if length(SW_anno_tokens) > 1
+      SW_anno2_files{c} = [SW_anno_fileprefs chr_id{c} sprintf('_%s_substitutions.txt', SW_anno_tokens{2})];
+    end
+    if length(SW_anno_tokens) > 2
+      SW_anno3_files{c} = [SW_anno_fileprefs chr_id{c} sprintf('_%s_substitutions.txt', SW_anno_tokens{3})];
+    end
+    if length(SW_anno_tokens) > 3
+      SW_anno4_files{c} = [SW_anno_fileprefs chr_id{c} sprintf('_%s_substitutions.txt', SW_anno_tokens{4})];
+    end
 end
 
-%% write output to a config .txt file
-infcfg_file = [base_dir sprintf('configs/%scfg.txt', label_out_pref)];
+%% save to config files
 
+infcfg_file = [base_dir sprintf('configs/%scfg.txt', label_out_pref)];
 files_invar.poly           = poly_proc_files;
 files_invar.mutprox        = MutProx_proc_files;
 files_invar.genmap         = genmap_files;
 files_invar.genmap_token   = genmap_token;
+files_invar.chr_features_file = chr_features_file;
 files_invar_file           = [base_dir sprintf('configs/%sfiles_invar.txt', label_out_pref)];
 files_buildGE.outfile_pref      = '';
 files_buildGE.chr_features_file = chr_features_file;
-files_buildGE.chr_id            = chr_id; 
+files_buildGE.chr_id            = chr_id;
 files_buildGE.pos_grid_files    = SWbase_pos_grid_files;
-files_buildGE.genmap_files      = genmap_files; 
+files_buildGE.genmap_files      = genmap_files;
 files_buildGE.genmap_token      = genmap_token;
-files_buildGE.SW_anno1_files = SW_anno1_files;  % edited 12/17 (turn on)
-% files_buildGE.SW_anno2_files = SW_anno2_files; 
-files_buildGE.SW_anno_tokens = SW_anno_tokens;  % edited 12/27
+% save cs anno file paths
+files_buildGE.SW_anno1_files = SW_anno1_files;
+files_buildGE.SW_anno2_files = SW_anno2_files;
+files_buildGE.SW_anno3_files = SW_anno3_files;
+files_buildGE.SW_anno4_files = SW_anno4_files;
+files_buildGE.SW_anno_tokens = SW_anno_tokens;
+% save bs file paths
 files_buildGE.BS_anno1_files = BS_anno1_files;
-% files_buildGE.BS_anno2_files = BS_anno2_files;  % edited 12/17
-% files_buildGE.BS_anno3_files = BS_anno3_files;  % 03/03/16 adding MORE annotations with chromHMM
-% files_buildGE.BS_anno4_files = BS_anno4_files;
-% files_buildGE.BS_anno5_files = BS_anno5_files;
+files_buildGE.BS_anno2_files = BS_anno2_files;
+files_buildGE.BS_anno3_files = BS_anno3_files;
+files_buildGE.BS_anno4_files = BS_anno4_files;
+files_buildGE.BS_anno5_files = BS_anno5_files;
 files_buildGE.BS_anno_tokens = BS_anno_tokens;
 files_buildGE_file           = [base_dir sprintf('configs/%sfiles_buildGE.txt',label_out_pref)];
-
 files_masks_file             = [base_dir sprintf('configs/%sfiles_masks.txt',label_out_pref)];
-
-files_bootstrap.chr_features_file = chr_features_file;
+% files_bootstrap.chr_features_file = chr_features_file;
