@@ -165,20 +165,4 @@ The inference program is designed to run for a range of inputs and settings that
 
 + The configuration file uses a variable called `base_dir` which is the base directory for all data files. All lower level directories called by the configuration will relate to the `base_dir`. You must assign this variable based on the system you are using to run the inference.
 + One early source of bugs will be misspecified filenames and directories. Go through the configurationFile carefully and make sure that all of the filenames and directories make sense and that they all exist. Some empty directories will be needed for the initial run (they will be filled as you go), so these must be specified as well.
-+ Many of the file names are build from smaller units, which are used in different contexts. For example, the genetic map name and map resolution are specified in the following variables:
-
-	genmap_id = 'AA_Map';
-	map_res = '10kb';
-	
-+ Using some of these identifiers, genetic map files are specified:
-
-        genmap_token = sprintf('%s_%s', genmap_id, map_res);
-        % write a list of genetic map files
-        % specify the full path to the files
-        for c=1:C
-            map_file = sprintf('maps/%s/%s_%s_window_hg19.gmap',genmap_id, chr_id{c}, genmap_token);
-            genmap_files{c} = [base_dir map_file];
-        end
-	
-+ Other files will be constructed using the `genmap_token` variable during the inference.
 + Read through the configuration file and modify it accordingly to suit your data and directory structure. It is heavily commented and most sections should be self-explanatory.
