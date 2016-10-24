@@ -67,10 +67,11 @@ The format for genetic maps is the following:
     1471286 0.385930091521  0.1299
 
 #### 3. Annotated segments
-Annotated segments are not strictly required in the case of running the inference with CS only, but for BGS a minimum of one segment annotation is required. Examples include "coding", "noncoding", "exonic", "utr", etc. For a given run, segments should not overlap, so if you choose "coding" and "utr" you should not include "exonic" as these segments will overlap. Within a given set of segments, segments must ALSO not overlap -- in general, for a set of indices $\{i_0, ..., i_{n-1}\}$ for the set of $n$ segments, the following conditions must hold:
+Annotated segments are not strictly required in the case of running the inference with CS only, but for BGS a minimum of one segment annotation is required. Examples include "coding", "noncoding", "exonic", "utr", etc. For a given run, segments should not overlap, so if you choose "coding" and "utr" you should not include "exonic" as these segments will overlap. Within a given set of segments, segments must ALSO not overlap -- in general, for a set of indices `i_0, ..., i_(n-1)` for the set of `n` segments, the following conditions must hold:
 
     segments[i][end] < segments[i+i][start]  (segments do not overlap each other)
-and for $\{i_0, ..., i_{n}\}$:
+
+and for `i_0, ..., i_n`:
 
     segments[i][start] < segments[i][end]  (segments have positive length)
 
@@ -137,6 +138,7 @@ Mutation rate file format is as follows:
 The position is the _start_ position for the range _(start, start + window)_, so in this case we are using 20KB windows and the rate from 180kb to 200kb is 1.004114.
 
 _NOTE: Even if you do not use a mutation rate correction, you need to specify a constant mutation rate. To use a constant mutation rate, just make a set of files for each chromosome with 2 rows:_
+    
     # POS    RATE
     chrom_start    1.0
     chrom_end    1.0
@@ -145,6 +147,7 @@ _This will apply a constant rate across your data via interpolation._
 
 #### 6. Chromosome lengths
 This simple file contains the name and lengths of each chromosome that will be used for the inference. It should have the following format:
+
     #chromosome	len
     chr1	249250621
     chr2	243199373
@@ -163,9 +166,12 @@ The inference program is designed to run for a range of inputs and settings that
 + The configuration file uses a variable called `base_dir` which is the base directory for all data files. All lower level directories called by the configuration will relate to the `base_dir`. You must assign this variable based on the system you are using to run the inference.
 + One early source of bugs will be misspecified filenames and directories. Go through the configurationFile carefully and make sure that all of the filenames and directories make sense and that they all exist. Some empty directories will be needed for the initial run (they will be filled as you go), so these must be specified as well.
 + Many of the file names are build from smaller units, which are used in different contexts. For example, the genetic map name and map resolution are specified in the following variables:
-        genmap_id = 'AA_Map';
-        map_res = '10kb';
+
+	genmap_id = 'AA_Map';
+	map_res = '10kb';
+	
 + Using some of these identifiers, genetic map files are specified:
+
         genmap_token = sprintf('%s_%s', genmap_id, map_res);
         % write a list of genetic map files
         % specify the full path to the files
@@ -173,5 +179,6 @@ The inference program is designed to run for a range of inputs and settings that
             map_file = sprintf('maps/%s/%s_%s_window_hg19.gmap',genmap_id, chr_id{c}, genmap_token);
             genmap_files{c} = [base_dir map_file];
         end
+	
 + Other files will be constructed using the `genmap_token` variable during the inference.
 + Read through the configuration file and modify it accordingly to suit your data and directory structure. It is heavily commented and most sections should be self-explanatory.
